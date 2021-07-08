@@ -1,13 +1,15 @@
-import type { ComponentConstructorInterface } from './Interfaces';
-import { createSymbolKey } from './symbols';
-import { HTMLElement, isElement, isEvent, matchesImpl, createEventImpl, hasOwnProperty } from './helpers';
-import { getOwnPropertyDescriptor } from './helpers';
+import type { Constructor, ClassElement, MethodsOf } from './types';
+import type { ComponentInstance, ComponentConstructor } from './Component';
+import { createSymbol, HTMLElement, isElement, isEvent, matchesImpl, createEventImpl, hasOwnProperty, getOwnPropertyDescriptor, getPrototypeOf } from './helpers';
 
 /**
  * A Symbol which contains all Node delegation.
  */
-const EVENT_CALLBACKS_SYMBOL: unique symbol = createSymbolKey() as any;
+const EVENT_CALLBACKS_SYMBOL: unique symbol = createSymbol();
 
+/**
+ * Async event interface.
+ */
 export type AsyncEvent = Event & {
     respondWith(callback: () => Promise<unknown>): void;
 };
@@ -23,8 +25,14 @@ export type DelegatedEventCallback = (event: Event, target?: Node) => unknown;
  * A descriptor for an event delegation.
  */
 export type DelegatedEventDescriptor = AddEventListenerOptions & {
+    target?: EventTarget;
     callback: DelegatedEventCallback;
 };
+
+/**
+ * Property configuration for properties accessor.
+ */
+export type ListenerConfig = DelegatedEventCallback | DelegatedEventDescriptor;
 
 /**
  * A collector for event delegations.
@@ -42,6 +50,10 @@ type DelegationList = {
          * The selector for the delegated event.
          */
         selector: string | null;
+        /**
+         * The event target.
+         */
+        target: EventTarget | null;
         /**
          * The callback for the delegated event.
          */
@@ -121,7 +133,7 @@ const assertEventComposed = (composed: unknown) => {
  * @param options An options object that specifies characteristics about the event listener. @see [MDN]{@link https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener}
  */
 export const delegateEventListener = (element: Element, eventName: string, selector: string|null, callback: DelegatedEventCallback, options?: AddEventListenerOptions) => {
-    let delegatedElement: Node & WithEventDelegations = element;
+    const delegatedElement: Node & WithEventDelegations = element;
 
     assertNode(element);
     assertEventName(eventName);
@@ -129,12 +141,12 @@ export const delegateEventListener = (element: Element, eventName: string, selec
     assertEventCallback(callback);
 
     // get all delegations
-    let delegations = delegatedElement[EVENT_CALLBACKS_SYMBOL] = delegatedElement[EVENT_CALLBACKS_SYMBOL] || {};
+    const delegations = delegatedElement[EVENT_CALLBACKS_SYMBOL] = delegatedElement[EVENT_CALLBACKS_SYMBOL] || {};
     // initialize the delegation list
-    let callbacks: DelegationList = delegations[eventName] = delegations[eventName] || {
+    const callbacks: DelegationList = delegations[eventName] = delegations[eventName] || {
         descriptors: [],
     };
-    let descriptors = callbacks.descriptors;
+    const descriptors = callbacks.descriptors;
     // check if the event has already been delegated
     if (!callbacks.listener) {
         // setup the listener
@@ -142,12 +154,12 @@ export const delegateEventListener = (element: Element, eventName: string, selec
             if (!event.target) {
                 return;
             }
-            let eventTarget = event.target as Node;
+            const eventTarget = event.target as Node;
             // wrap the Event's stopPropagation in order to prevent other delegations from the same root
+            const originalStopPropagation = event.stopPropagation;
+            const originalImmediatePropagation = event.stopImmediatePropagation;
             let stopped = false;
             let stoppedImmediated = false;
-            let originalStopPropagation = event.stopPropagation;
-            let originalImmediatePropagation = event.stopImmediatePropagation;
             event.stopPropagation = () => {
                 stopped = true;
                 // exec the real stopPropagation method
@@ -161,9 +173,9 @@ export const delegateEventListener = (element: Element, eventName: string, selec
             };
 
             // filter matched selector for the event
-            let filtered: { target: Node; callback: DelegatedEventCallback }[] = [];
+            const filtered: { target: Node; callback: DelegatedEventCallback }[] = [];
             for (let i = 0; i < descriptors.length; i++) {
-                let { selector, callback } = descriptors[i];
+                const { selector, callback } = descriptors[i];
                 let selectorTarget;
                 if (selector) {
                     let target = eventTarget;
@@ -213,7 +225,7 @@ export const delegateEventListener = (element: Element, eventName: string, selec
     }
 
     // add the delegation to the list
-    descriptors.push({ event: eventName, callback, selector });
+    descriptors.push({ event: eventName, callback, selector, target: null });
 };
 
 /**
@@ -243,7 +255,7 @@ export const undelegateEventListener = (element: Element, eventName: string, sel
     // get the list of delegations
     // find the index of the callback to remove in the list
     for (let i = 0; i < descriptors.length; i++) {
-        let descriptor = descriptors[i];
+        const descriptor = descriptors[i];
         if (descriptor.selector === selector && descriptor.callback === callback) {
             descriptors.splice(i, 1);
             if (descriptors.length === 0) {
@@ -290,7 +302,7 @@ function initEvent(event: Event | string, detail?: CustomEventInit, bubbles?: bo
  * @param cancelable Should the event be cancelable.
  * @param composed Is the event composed.
  */
-export const dispatchEvent = (element: Element, event: Event | string, detail?: any, bubbles: boolean = true, cancelable: boolean = true, composed: boolean = false): boolean => {
+export const dispatchEvent = (element: Element, event: Event | string, detail?: CustomEventInit['detail'], bubbles: boolean = true, cancelable: boolean = true, composed: boolean = false): boolean => {
     assertNode(element);
     event = initEvent(event, detail, bubbles, cancelable, composed);
     return HTMLElement.prototype.dispatchEvent.call(element, event);
@@ -306,9 +318,9 @@ export const dispatchEvent = (element: Element, event: Event | string, detail?: 
  * @param cancelable Should the event be cancelable.
  * @param composed Is the event composed.
  */
-export const dispatchAsyncEvent = async (element: Element, event: Event | string, detail?: any, bubbles: boolean = true, cancelable: boolean = true, composed: boolean = false): Promise<unknown[]> => {
-    let asyncEvent = initEvent(event, detail, bubbles, cancelable, composed) as unknown as AsyncEvent;
-    let promises: unknown[] = [];
+export const dispatchAsyncEvent = async (element: Element, event: Event | string, detail?: CustomEventInit['detail'], bubbles: boolean = true, cancelable: boolean = true, composed: boolean = false): Promise<unknown[]> => {
+    const asyncEvent = initEvent(event, detail, bubbles, cancelable, composed) as unknown as AsyncEvent;
+    const promises: unknown[] = [];
     asyncEvent.respondWith = function(callback) {
         promises.push(callback());
     };
@@ -320,66 +332,155 @@ export const dispatchAsyncEvent = async (element: Element, event: Event | string
 
 /**
  * A Symbol which contains all listeners instances of a component constructor.
- * @private
  */
-const LISTENERS_SYMBOL: unique symbol = createSymbolKey() as any;
+const LISTENERS_SYMBOL: unique symbol = createSymbol();
+
+/**
+ * An object with listeners.
+ */
+type WithListeners<T> = T & {
+    [LISTENERS_SYMBOL]?: Listener[];
+};
+
+/**
+ * The listener interface.
+ */
+type Listener = {
+    event: string;
+    selector: string | null;
+    target: EventTarget | null;
+    callback: DelegatedEventCallback;
+    options?: AddEventListenerOptions;
+};
 
 /**
  * Retrieve all listeners descriptors.
  * @param constructor The component constructor.
  * @return A list of listeners.
  */
-export const getListeners = (constructor: ComponentConstructorInterface<HTMLElement>) => {
-    if (!hasOwnProperty.call(constructor, LISTENERS_SYMBOL)) {
+export const getListeners = (prototype: WithListeners<ComponentInstance<HTMLElement>>) => {
+    const listeners = prototype[LISTENERS_SYMBOL];
+    if (!listeners) {
         return [];
     }
 
-    return (constructor as any)[LISTENERS_SYMBOL] as {
-        event: string;
-        selector: string | null;
-        callback: DelegatedEventCallback;
-        options?: AddEventListenerOptions;
-    }[];
+    if (!hasOwnProperty.call(prototype, LISTENERS_SYMBOL)) {
+        return listeners.slice(0);
+    }
+
+    return listeners;
 };
 
 /**
- * Define component constructor listeners.
- * @param constructor The component constructor.
+ * Add an event listener to the prototype.
+ * @param prototype The component prototype.
+ * @param eventName The name of the event to listen.
+ * @param callback The event callback.
+ * @param options The event listener options.
  */
-export const defineListeners = (constructor: ComponentConstructorInterface<HTMLElement>) => {
+export function defineListener(
+    prototype: WithListeners<ComponentInstance<HTMLElement>>,
+    eventName: string,
+    target: EventTarget | null,
+    selector: string | null,
+    callback: DelegatedEventCallback,
+    options: AddEventListenerOptions = {}
+) {
+    const listeners = prototype[LISTENERS_SYMBOL] = getListeners(prototype);
+    listeners.push({
+        event: eventName,
+        selector,
+        callback,
+        target,
+        options,
+    });
+}
+
+/**
+ * Define component listeners.
+ * @param prototype The component prototype.
+ */
+export const defineListeners = (prototype: ComponentInstance<HTMLElement>) => {
+    const constructor = prototype.constructor as WithListeners<ComponentConstructor<HTMLElement>>;
     let ctr = constructor;
-    let listeners = (constructor as any)[LISTENERS_SYMBOL] = getListeners(constructor);
-    while (ctr && ctr !== HTMLElement) {
-        let listenersDescriptor = getOwnPropertyDescriptor(ctr, 'listeners');
-        let listenersGetter = listenersDescriptor && listenersDescriptor.get;
+    while (ctr && ctr.prototype && ctr !== HTMLElement) {
+        if (hasOwnProperty.call(ctr.prototype, LISTENERS_SYMBOL)) {
+            break;
+        }
+        const listenersDescriptor = getOwnPropertyDescriptor(ctr, 'listeners');
+        const listenersGetter = listenersDescriptor && listenersDescriptor.get;
         if (listenersGetter) {
-            let listenerDescriptors = (listenersGetter.call(constructor) || {}) as {
-                [key: string]: DelegatedEventCallback | DelegatedEventDescriptor;
+            const listenerDescriptors = (listenersGetter.call(constructor) || {}) as {
+                [key: string]: ListenerConfig;
             };
             // register listeners
-            for (let eventPath in listenerDescriptors) {
-                let paths = eventPath.trim().split(' ');
-                let descriptor = listenerDescriptors[eventPath];
-                if (typeof descriptor === 'function') {
-                    listeners.push({
-                        event: paths.shift() as string,
-                        selector: paths.join(' '),
-                        callback: descriptor,
-                    });
-                } else {
-                    listeners.push({
-                        event: paths.shift() as string,
-                        selector: paths.join(' '),
-                        callback: descriptor.callback,
-                        options: {
-                            capture: descriptor.capture,
-                            once: descriptor.once,
-                            passive: descriptor.passive,
-                        },
-                    });
-                }
+            for (const eventPath in listenerDescriptors) {
+                const paths = eventPath.trim().split(' ');
+                const eventName = paths.shift() as string;
+                const selector = paths.length ? paths.join(' ') : null;
+                const descriptor = listenerDescriptors[eventPath];
+                const { callback, target = null, ...options } = typeof descriptor === 'object' ? descriptor : { callback: descriptor };
+                defineListener(prototype, eventName, target, selector, callback, options);
             }
         }
-        ctr = Object.getPrototypeOf(ctr);
+        ctr = getPrototypeOf(ctr);
     }
 };
+
+/**
+ * Add a property observer to a component prototype.
+ * @param targetOrClassElement The component prototype.
+ * @param propertyKey The property name to watch.
+ * @param methodKey The method name.
+ */
+export const createListener = <T extends ComponentInstance<HTMLElement>, P extends MethodsOf<T>>(
+    targetOrClassElement: T,
+    eventName: string,
+    target: EventTarget | null,
+    selector: string | null,
+    options: AddEventListenerOptions,
+    methodKey?: P
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): any => {
+    if (methodKey !== undefined) {
+        defineListener(targetOrClassElement, eventName, target, selector, targetOrClassElement[methodKey], options);
+        return;
+    }
+
+    const element = targetOrClassElement as unknown as ClassElement;
+    return {
+        ...element,
+        finisher(constructor: Constructor<T>) {
+            defineListener(constructor.prototype, eventName, target, selector, constructor.prototype[element.key as P], options);
+        },
+    };
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isEventTarget = (target: any): target is EventTarget => typeof target === 'object' && 'addEventListener' in target;
+
+/**
+ * A decorator for listening DOM events.
+ *
+ * @param eventName The name of the event to listen.
+ * @param options Options to pass to addEventListener.
+ * @return The decorator initializer.
+ */
+function listen(eventName: string, options?: AddEventListenerOptions): Function;
+function listen(eventName: string, selector: string, options?: AddEventListenerOptions): Function;
+function listen(eventName: string, target: EventTarget, options?: AddEventListenerOptions): Function;
+function listen(eventName: string, target?: string | EventTarget | AddEventListenerOptions, options?: AddEventListenerOptions) {
+    return <T extends ComponentInstance<HTMLElement>, P extends MethodsOf<T>>(
+        targetOrClassElement: T,
+        methodKey: P
+    ) => createListener(
+        targetOrClassElement,
+        eventName,
+        isEventTarget(target) ? target : null,
+        typeof target === 'string' ? target : null,
+        (!isEventTarget(target) && typeof target !== 'string' ? target : options) || {},
+        methodKey
+    );
+}
+
+export { listen };

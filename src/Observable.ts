@@ -1,4 +1,4 @@
-import { createSymbolKey } from './symbols';
+import { createSymbol } from './helpers';
 
 /**
  * Subscription-like minimal interface.
@@ -17,9 +17,12 @@ export type Observable<T> = {
 
 /**
  * A Symbol which contains Subscription state.
- * @private
  */
-const SUBSCRIPTION_SYMBOL: unique symbol = createSymbolKey() as any;
+const SUBSCRIPTION_SYMBOL: unique symbol = createSymbol();
+
+type WithObservableState<T> = T & {
+    [SUBSCRIPTION_SYMBOL]?: ObservableState;
+};
 
 /**
  * An object representing the status of a Subscribable.
@@ -34,6 +37,7 @@ export type ObservableState = {
  * Check if the target is a Subscribable (has the `subscribe` method).
  * @param target The object to check.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isObservable = (target: any): target is Observable<unknown> => typeof target['subscribe'] === 'function';
 
 /**
@@ -41,26 +45,25 @@ export const isObservable = (target: any): target is Observable<unknown> => type
  * @param target The Subscribable to extend.
  * @return The Subscribable state instance.
  */
-export const getObservableState = (target: any): ObservableState => {
-    let subscribable: Observable<unknown> = target;
-    if ((subscribable as any)[SUBSCRIPTION_SYMBOL]) {
-        return (subscribable as any)[SUBSCRIPTION_SYMBOL];
+export const getObservableState = <T extends Observable<unknown>>(target: WithObservableState<T>): ObservableState => {
+    const state = target[SUBSCRIPTION_SYMBOL];
+    if (state) {
+        return state;
     }
-    let state: ObservableState = {
+    const newState = target[SUBSCRIPTION_SYMBOL] = {
         complete: false,
         errored: false,
-    };
-    (subscribable as any)[SUBSCRIPTION_SYMBOL] = state;
-    subscribable
+    } as ObservableState;
+    target
         .subscribe((value) => {
-            state.current = value;
-            state.errored = false;
+            newState.current = value;
+            newState.errored = false;
         }, (error) => {
-            state.current = error;
-            state.errored = true;
+            newState.current = error;
+            newState.errored = true;
         }, () => {
-            state.complete = true;
+            newState.complete = true;
         });
 
-    return state;
+    return newState;
 };

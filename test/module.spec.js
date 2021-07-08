@@ -1,5 +1,6 @@
-import './helpers';
+import './helpers.spec.js';
 import * as DNA from '@chialab/dna';
+import { expect } from '@esm-bundle/chai/esm/chai.js';
 
 describe('module', function() {
     this.timeout(10 * 1000);
@@ -7,7 +8,6 @@ describe('module', function() {
     const EXPECTED_EXPORT_MAP = {
         window: 'object',
         customElements: 'object',
-        CustomElementRegistry: 'function',
         customElement: 'function',
         DOM: 'object',
         connect: 'function',
@@ -16,6 +16,7 @@ describe('module', function() {
         render: 'function',
         Fragment: 'symbol',
         h: 'function',
+        compile: 'function',
         html: 'function',
         css: 'function',
         defineListeners: 'function',
@@ -28,13 +29,17 @@ describe('module', function() {
         getProperty: 'function',
         getProperties: 'function',
         property: 'function',
+        state: 'function',
+        observe: 'function',
+        listen: 'function',
         isComponent: 'function',
         isComponentConstructor: 'function',
         Component: 'function',
+        parseDOM: 'function',
         until: 'function',
     };
 
-    for (let ref in EXPECTED_EXPORT_MAP) {
+    for (const ref in EXPECTED_EXPORT_MAP) {
         it(`should export "${ref}"`, () => {
             if (ref === 'window') {
                 expect(DNA).to.have.property(ref);

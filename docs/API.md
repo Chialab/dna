@@ -1,38 +1,24 @@
 # API Reference
 
-
-
-
-
-**Classes**
+<strong>Classes</strong>
 
 <a href="#customelementregistry">CustomElementRegistry</a>
 
+<strong>Types</strong>
 
+<a href="#asyncevent">AsyncEvent</a>, <a href="#componentconstructor">ComponentConstructor</a>, <a href="#componentinstance">ComponentInstance</a>, <a href="#context">Context</a>, <a href="#delegatedeventcallback">DelegatedEventCallback</a>, <a href="#delegatedeventdescriptor">DelegatedEventDescriptor</a>, <a href="#functioncomponent">FunctionComponent</a>, <a href="#hyperclasses">HyperClasses</a>, <a href="#hypercomponent">HyperComponent</a>, <a href="#hyperfragment">HyperFragment</a>, <a href="#hyperfunction">HyperFunction</a>, <a href="#hypernode">HyperNode</a>, <a href="#hyperproperties">HyperProperties</a>, <a href="#hyperslot">HyperSlot</a>, <a href="#hyperstyle">HyperStyle</a>, <a href="#hypertag">HyperTag</a>, <a href="#observable">Observable</a>, <a href="#propertydeclaration">PropertyDeclaration</a>, <a href="#propertyobserver">PropertyObserver</a>, <a href="#template">Template</a>
 
+<strong>Variables</strong>
 
-**Constants**
+<a href="#component">Component</a>, <a href="#dom">DOM</a>, <a href="#fragment">Fragment</a>, <a href="#hyperobject">HyperObject</a>, <a href="#customelements">customElements</a>, <a href="#window">window</a>
 
-<a href="#namespace">namespace</a>, <a href="#customelements">customElements</a>, <a href="#customelement">customElement</a>, <a href="#component_symbol">COMPONENT_SYMBOL</a>, <a href="#constructed_symbol">CONSTRUCTED_SYMBOL</a>, <a href="#connect">connect</a>, <a href="#disconnect">disconnect</a>, <a href="#dom">DOM</a>, <a href="#render">render</a>, <a href="#fragment">Fragment</a>, <a href="#h">h</a>, <a href="#html">html</a>, <a href="#css">css</a>, <a href="#delegateeventlistener">delegateEventListener</a>, <a href="#undelegateeventlistener">undelegateEventListener</a>, <a href="#dispatchevent">dispatchEvent</a>, <a href="#dispatchasyncevent">dispatchAsyncEvent</a>, <a href="#definelisteners">defineListeners</a>, <a href="#property">property</a>, <a href="#getproperty">getProperty</a>, <a href="#getproperties">getProperties</a>, <a href="#defineproperties">defineProperties</a>, <a href="#defineproperty">defineProperty</a>, <a href="#iscomponent">isComponent</a>, <a href="#iscomponentconstructor">isComponentConstructor</a>, <a href="#extend">extend</a>, <a href="#component">Component</a>, <a href="#until">until</a>
+<strong>Functions</strong>
 
-
-**Enums**
-
-<a href="#namespaceuri">NamespaceURI</a>
-
-
-**Types**
-
-<a href="#componentconstructorinterface">ComponentConstructorInterface</a>, <a href="#classfielddescriptor">ClassFieldDescriptor</a>, <a href="#classfieldattributeconverter">ClassFieldAttributeConverter</a>, <a href="#classfieldpropertyconverter">ClassFieldPropertyConverter</a>, <a href="#classfieldobserver">ClassFieldObserver</a>, <a href="#classfieldvalidator">ClassFieldValidator</a>, <a href="#delegatedeventcallback">DelegatedEventCallback</a>, <a href="#delegatedeventdescriptor">DelegatedEventDescriptor</a>, <a href="#componentinterface">ComponentInterface</a>, <a href="#iterablenodelist">IterableNodeList</a>, <a href="#template">Template</a>, <a href="#templateitem">TemplateItem</a>, <a href="#hypernode">HyperNode</a>, <a href="#templatefunction">TemplateFunction</a>, <a href="#hyperproperties">HyperProperties</a>, <a href="#templateitems">TemplateItems</a>, <a href="#hyperclasses">HyperClasses</a>, <a href="#context">Context</a>, <a href="#propertiesmap">PropertiesMap</a>, <a href="#observable">Observable</a>, <a href="#subscription">Subscription</a>, <a href="#classdescriptor">ClassDescriptor</a>, <a href="#classelement">ClassElement</a>, <a href="#templatefilter">TemplateFilter</a>, <a href="#asyncevent">AsyncEvent</a>
-
+<a href="#compile">compile</a>, <a href="#connect">connect</a>, <a href="#css">css</a>, <a href="#customelement">customElement</a>, <a href="#definelisteners">defineListeners</a>, <a href="#defineproperties">defineProperties</a>, <a href="#defineproperty">defineProperty</a>, <a href="#delegateeventlistener">delegateEventListener</a>, <a href="#disconnect">disconnect</a>, <a href="#dispatchasyncevent">dispatchAsyncEvent</a>, <a href="#dispatchevent">dispatchEvent</a>, <a href="#extend">extend</a>, <a href="#getproperties">getProperties</a>, <a href="#getproperty">getProperty</a>, <a href="#h">h</a>, <a href="#html">html</a>, <a href="#iscomponent">isComponent</a>, <a href="#iscomponentconstructor">isComponentConstructor</a>, <a href="#listen">listen</a>, <a href="#observe">observe</a>, <a href="#parsedom">parseDOM</a>, <a href="#property">property</a>, <a href="#render">render</a>, <a href="#state">state</a>, <a href="#undelegateeventlistener">undelegateEventListener</a>, <a href="#until">until</a>
 
 <hr />
 
-<strong id="customelementregistry"><code>class</code>  CustomElementRegistry</strong>
-    
-
-
-
+<strong id="customelementregistry"><code>Class</code> CustomElementRegistry</strong>
 
 <p>
 
@@ -40,119 +26,65 @@ The CustomElementRegistry interface provides methods for registering custom elem
 
 </p>
 
-
-
-<strong>Properties</strong>
+<strong>Propertie</strong>
 
 <table>
-    <thead>
-        <th align="left">Name</th>
-        <th align="left">Type</th>
-        <th align="center">Readonly</th>
-        <th align="left">Description</th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>native</td>
-            <td><code>boolean</code></td>
-            <td align="center">✓</td>
-            <td>Support native registry.</td></tr>
+        <thead>
+            <th align="left">Name</th>
+            <th align="left">Type</th>
+            <th align="left">Readonly</th>
+            <th align="left">Description</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>native</td>
+                <td><code>Property</code></td>
+                <td align="center">✓</td>
+                <td>Support native registry.</td></tr>
 <tr>
-            <td>registry</td>
-            <td><code>{
-    [key: string]: HTMLElement;
-}</code></td>
-            <td align="center">✓</td>
-            <td>A global registry.</td></tr>
+                <td>queue</td>
+                <td><code>Property</code></td>
+                <td align="center">✓</td>
+                <td>Collect "whenDefined" promises.</td></tr>
 <tr>
-            <td>tagNames</td>
-            <td><code>{
-    [key: string]: string;
-}</code></td>
-            <td align="center">✓</td>
-            <td>A map of tag names.</td></tr>
+                <td>registry</td>
+                <td><code>Property</code></td>
+                <td align="center">✓</td>
+                <td>A global registry.</td></tr>
 <tr>
-            <td>queue</td>
-            <td><code>{
-    [key: string]: Array&lt;(value?: any): void&gt;;
-}</code></td>
-            <td align="center">✓</td>
-            <td>Collect "whenDefined" promises.</td>
-        </tr>
-    </tbody>
-</table>
-
+                <td>tagNames</td>
+                <td><code>Property</code></td>
+                <td align="center">✓</td>
+                <td>A map of tag names.</td>
+            </tr>
+        </tbody>
+    </table>
 
 <strong>Methods</strong>
 
-<strong id="get"><code>method</code>  get</strong>
-
-
-
-<p>
-
-Get the Custom Element definition for a tag.
-
-</p>
+<strong><code>Function</code> constructor</strong>
 
 <details>
 <summary>
-<code>(name: string): HTMLElement|undefined</code>
-</summary><br />
+    <code>new (): <a href="#customelementregistry">CustomElementRegistry</a></code>
+</summary>
 
+<strong>Returns</strong>: <code><a href="#customelementregistry">CustomElementRegistry</a></code> 
 
-
-<strong>Params</strong>
-
-<table>
-    <thead>
-        <th align="left">Name</th>
-        <th align="left">Type</th>
-        <th align="center">Optional</th>
-        <th align="left">Description</th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>name</td>
-            <td><code>string</code></td>
-            <td align="center"></td>
-            <td>The name of the tag.</td>
-        </tr>
-    </tbody>
-</table>
-
-<strong>Returns</strong>: <code>HTMLElement|undefined</code> The definition for the given tag.
-
-<br />
 </details>
 
-
-
-
-
-<br />
-
-<strong id="define"><code>method</code>  define</strong>
-
-
-
-<p>
-
-Define a new Custom Element.
-
-</p>
+<strong id="define"><code>Function</code> define</strong>
 
 <details>
 <summary>
-<code>(name: string, constructor: HTMLElement & {
-    shim?: boolean;
-}, options?: ElementDefinitionOptions): void</code>
-</summary><br />
-
-
+    <code>(name: string, constructor: <a href="#constructor">Constructor</a> & {
+  observedAttributes?: string[]
+} & {
+  shim?: boolean
+}, options: <a href="#elementdefinitionoptions">ElementDefinitionOptions</a>): void</code>
+</summary>
 
 <strong>Params</strong>
-
 <table>
     <thead>
         <th align="left">Name</th>
@@ -165,53 +97,37 @@ Define a new Custom Element.
             <td>name</td>
             <td><code>string</code></td>
             <td align="center"></td>
-            <td>The tag name for the element.</td></tr>
+            <td></td></tr>
 <tr>
             <td>constructor</td>
-            <td><code>HTMLElement & {
-    shim?: boolean;
+            <td><code><a href="#constructor">Constructor</a> & {
+  observedAttributes?: string[]
+} & {
+  shim?: boolean
 }</code></td>
             <td align="center"></td>
-            <td>The Custom Element constructor.</td></tr>
+            <td></td></tr>
 <tr>
             <td>options</td>
-            <td><code>ElementDefinitionOptions</code></td>
-            <td align="center">✓</td>
-            <td>A set of definition options, like `extends` for native tag extension.</td>
+            <td><code><a href="#elementdefinitionoptions">ElementDefinitionOptions</a></code></td>
+            <td align="center"></td>
+            <td></td>
         </tr>
     </tbody>
 </table>
 
 <strong>Returns</strong>: <code>void</code> 
 
-<br />
 </details>
 
-
-
-
-
-<br />
-
-<strong id="whendefined"><code>method</code>  whenDefined</strong>
-
-
-
-<p>
-
-It returns a Promise that resolves when the named element is defined.
-
-</p>
+<strong id="get"><code>Function</code> get</strong>
 
 <details>
 <summary>
-<code>(name: string): Promise&lt;HTMLElement&gt;</code>
-</summary><br />
-
-
+    <code>(name: string): undefined | <a href="#customelementconstructor">CustomElementConstructor</a></code>
+</summary>
 
 <strong>Params</strong>
-
 <table>
     <thead>
         <th align="left">Name</th>
@@ -224,41 +140,23 @@ It returns a Promise that resolves when the named element is defined.
             <td>name</td>
             <td><code>string</code></td>
             <td align="center"></td>
-            <td>The Custom Element name.</td>
+            <td></td>
         </tr>
     </tbody>
 </table>
 
-<strong>Returns</strong>: <code>Promise&lt;HTMLElement&gt;</code> A Promise that resolves when the named element is defined.
+<strong>Returns</strong>: <code>undefined | <a href="#customelementconstructor">CustomElementConstructor</a></code> The definition for the given tag.
 
-<br />
 </details>
 
-
-
-
-
-<br />
-
-<strong id="upgrade"><code>method</code>  upgrade</strong>
-
-
-
-<p>
-
-It upgrades all custom elements in a subtree even before they are connected to the main document.
-
-</p>
+<strong id="upgrade"><code>Function</code> upgrade</strong>
 
 <details>
 <summary>
-<code>(root: HTMLElement): void</code>
-</summary><br />
-
-
+    <code>(root: <a href="#htmlelement">HTMLElement</a>): void</code>
+</summary>
 
 <strong>Params</strong>
-
 <table>
     <thead>
         <th align="left">Name</th>
@@ -269,608 +167,420 @@ It upgrades all custom elements in a subtree even before they are connected to t
     <tbody>
         <tr>
             <td>root</td>
-            <td><code>HTMLElement</code></td>
+            <td><code><a href="#htmlelement">HTMLElement</a></code></td>
             <td align="center"></td>
-            <td>A Node instance with descendant elements that are to be upgraded.</td>
+            <td></td>
         </tr>
     </tbody>
 </table>
 
 <strong>Returns</strong>: <code>void</code> 
 
-<br />
 </details>
 
+<strong id="whendefined"><code>Function</code> whenDefined</strong>
 
+<details>
+<summary>
+    <code>(name: string): <a href="#promise">Promise</a></code>
+</summary>
 
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>name</td>
+            <td><code>string</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
 
+<strong>Returns</strong>: <code><a href="#promise">Promise</a></code> A Promise that resolves when the named element is defined.
 
-
-
-
-
-
-
-
-
+</details>
 
 <hr />
 
-<strong id="namespace"><code>constant</code>  namespace</strong>
-
-
-
-
-
-
-
-<strong>Type:</strong>
-
-<pre>Window & globalThis</pre>
-
-
-
-
-<hr />
-
-<strong id="customelements"><code>constant</code>  customElements</strong>
-
-
-
+<strong id="asyncevent"><code>Type</code> AsyncEvent</strong>
+    
 <p>
 
-The global DNA registry instance.
+Async event interface.
 
 </p>
 
-
-
-<strong>Type:</strong>
-
-<pre><a href="#customelementregistry">CustomElementRegistry</a></pre>
-
-
-
-
-<hr />
-
-<strong id="customelement"><code>constant</code>  customElement</strong>
-
-
-
-<p>
-
-Decorate and define component classes.
-
-</p>
-
-
-
-<strong>Type:</strong>
-
-<pre>(name: string, options?: ElementDefinitionOptions|undefined): (classOrDescriptor: <a href="#componentconstructorinterface">ComponentConstructorInterface</a>&lt;HTMLElement&gt;|<a href="#classdescriptor">ClassDescriptor</a>): any</pre>
-
-
-
-
-<hr />
-
-<strong id="component_symbol"><code>constant</code>  COMPONENT_SYMBOL</strong>
-
-
-
-<p>
-
-A symbol which identify components.
-
-</p>
-
-
-
-<strong>Type:</strong>
-
-<pre>unique Symbol</pre>
-
-
-
-
-<hr />
-
-<strong id="constructed_symbol"><code>constant</code>  CONSTRUCTED_SYMBOL</strong>
-
-
-
-<p>
-
-A symbol which identify constructed components (properties can be assigned).
-
-</p>
-
-
-
-<strong>Type:</strong>
-
-<pre>unique Symbol</pre>
-
-
-
-
-<hr />
-
-<strong id="connect"><code>constant</code>  connect</strong>
-
-
-
-<p>
-
-Invoke `connectedCallback` method of a Node (and its descendents).
-It does nothing if life cycle is disabled.
-
-</p>
-
-
-
-<strong>Type:</strong>
-
-<pre>(node: Node, force?: boolean): void</pre>
-
-
-
-
-<hr />
-
-<strong id="disconnect"><code>constant</code>  disconnect</strong>
-
-
-
-<p>
-
-Invoke `disconnectedCallback` method of a Node (and its descendents).
-It does nothing if life cycle is disabled.
-
-</p>
-
-
-
-<strong>Type:</strong>
-
-<pre>(node: Node): void</pre>
-
-
-
-
-<hr />
-
-<strong id="dom"><code>constant</code>  DOM</strong>
-
-
-
-<p>
-
-DOM is a singleton that components uses to access DOM methods.
-By default, it uses browsers' DOM implementation, but it can be set to use a different one.
-For example, in a Node context it is possibile to use DNA thanks to the `jsdom` dom implementation.
-It also handle element life cycle for custom elements unless otherwise specified.
-
-</p>
-
-
-
-<strong>Type:</strong>
-
-<pre>{
-    createDocumentFragment: (): DocumentFragment;
-    createElement&lt;K extends keyof HTMLElementTagNameMap&gt;(tagName: K, options?: ElementCreationOptions|undefined): HTMLElementTagNameMap[K];
-    createElementNS(namespaceURI: string, tagName: string): Element;
-    createTextNode: (data: string): Text;
-    createComment(data: string): Comment;
-    createEvent(typeArg: string, eventInitDict?: CustomEventInit&lt;any&gt;): CustomEvent&lt;any&gt;;
-    appendChild&lt;T extends Node&gt;(parent: Node, newChild: T, slot?: boolean): T;
-    removeChild&lt;T_1 extends Node&gt;(parent: Node, oldChild: T_1, slot?: boolean): T_1;
-    insertBefore&lt;T_2 extends Node&gt;(parent: Node, newChild: T_2, refChild: Node|null, slot?: boolean): T_2;
-    replaceChild&lt;T_3 extends Node&gt;(parent: Node, newChild: Node, oldChild: T_3, slot?: boolean): T_3;
-    getAttribute(element: Element, qualifiedName: string): string|null;
-    hasAttribute(element: Element, qualifiedName: string): boolean;
-    setAttribute(element: Element, qualifiedName: string, value: string): void;
-    removeAttribute(element: Element, qualifiedName: string): void;
+<pre><a href="#event">Event</a> & {
+  respondWith(callback: () => <a href="#promise">Promise</a>): void
 }</pre>
 
-
-
-
 <hr />
 
-<strong id="render"><code>constant</code>  render</strong>
-
-
-
+<strong id="componentconstructor"><code>Type</code> ComponentConstructor&lt;T extends <a href="#htmlelement">HTMLElement</a>&gt;</strong>
+    
 <p>
 
-Render a set of Nodes into another, with some checks for Nodes in order to avoid
-useless changes in the tree and to mantain or update the state of compatible Nodes.
+The basic DNA Component constructor.
 
 </p>
 
-
-
-<strong>Type:</strong>
-
-<pre>(input: <a href="#template">Template</a>, root?: Node, slot?: boolean): Node|Node[]|void</pre>
-
-
-
+<pre><a href="#returntype">ReturnType</a> & <a href="#constructor">Constructor</a></pre>
 
 <hr />
 
-<strong id="fragment"><code>constant</code>  Fragment</strong>
-
-
-
+<strong id="componentinstance"><code>Type</code> ComponentInstance&lt;T extends <a href="#htmlelement">HTMLElement</a>&gt;</strong>
+    
 <p>
 
-A constructor alias used for JSX fragments </>.
+The basic DNA Component interface.
+It's a Custom Element, but with some extra useful method.
 
 </p>
 
-
-
-<strong>Type:</strong>
-
-<pre>Symbol</pre>
-
-
-
-
-<hr />
-
-<strong id="h"><code>constant</code>  h</strong>
-
-
-
-<p>
-
-HyperFunction factory to use as JSX pragma.
-
-</p>
-
-
-
-<strong>Type:</strong>
-
-<pre>(tagOrComponent: string|HTMLElement|<a href="#fragment">Fragment</a>|<a href="#templatefunction">TemplateFunction</a>|Node, properties?: <a href="#hyperproperties">HyperProperties</a>|null, children: <a href="#templateitems">TemplateItems</a>): <a href="#hypernode">HyperNode</a></pre>
-
-
-
-
-<hr />
-
-<strong id="html"><code>constant</code>  html</strong>
-
-
-
-<p>
-
-Compile a template string into virtual DOM template.
-
-</p>
-
-
-
-<strong>Type:</strong>
-
-<pre>(string: string|TemplateStringsArray, values: any[]): <a href="#template">Template</a></pre>
-
-
-
-
-<hr />
-
-<strong id="css"><code>constant</code>  css</strong>
-
-
-
-<p>
-
-Scope a CSS string, adding a compnent-specific trailing selector to all rules.
-It also converts `:host` selectors for cross browser compatibility.
-
-</p>
-
-
-
-<strong>Type:</strong>
-
-<pre>(name: string, cssText: string, extend?: string|undefined): string</pre>
-
-
-
-
-<hr />
-
-<strong id="delegateeventlistener"><code>constant</code>  delegateEventListener</strong>
-
-
-
-<p>
-
-Delegate an Event listener.
-
-</p>
-
-
-
-<strong>Type:</strong>
-
-<pre>(element: Element, eventName: string, selector: string|null, callback: <a href="#delegatedeventcallback">DelegatedEventCallback</a>, options?: AddEventListenerOptions|undefined): void</pre>
+<pre><a href="#instancetype">InstanceType</a></pre>
 
 <strong>See also</strong>
 
-* [MDN][https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener)
-
-
-<hr />
-
-<strong id="undelegateeventlistener"><code>constant</code>  undelegateEventListener</strong>
-
-
-
-<p>
-
-Remove an Event delegation.
-
-</p>
-
-
-
-<strong>Type:</strong>
-
-<pre>(element: Element, eventName: string, selector: string|null, callback: <a href="#delegatedeventcallback">DelegatedEventCallback</a>): void</pre>
-
-
-
+* [W3C specification]{@link https://w3c.github.io/webcomponents/spec/custom/}.
 
 <hr />
 
-<strong id="dispatchevent"><code>constant</code>  dispatchEvent</strong>
-
-
-
+<strong id="context"><code>Type</code> Context&lt;T extends <a href="#node">Node</a>, F extends <a href="#updaterequest">UpdateRequest</a> | undefined, P, S&gt;</strong>
+    
 <p>
 
-Dispatch a custom Event.
+The node context interface.
 
 </p>
 
-
-
-<strong>Type:</strong>
-
-<pre>(element: Element, event: Event|string, detail?: any, bubbles?: boolean, cancelable?: boolean, composed?: boolean): boolean</pre>
-
-
-
-
-<hr />
-
-<strong id="dispatchasyncevent"><code>constant</code>  dispatchAsyncEvent</strong>
-
-
-
-<p>
-
-Dispatch an async custom Event.
-
-</p>
-
-
-
-<strong>Type:</strong>
-
-<pre>(element: Element, event: Event|string, detail?: any, bubbles?: boolean, cancelable?: boolean, composed?: boolean): Promise&lt;any[]&gt;</pre>
-
-
-
-
-<hr />
-
-<strong id="definelisteners"><code>constant</code>  defineListeners</strong>
-
-
-
-<p>
-
-Define component constructor listeners.
-
-</p>
-
-
-
-<strong>Type:</strong>
-
-<pre>(constructor: <a href="#componentconstructorinterface">ComponentConstructorInterface</a>&lt;HTMLElement&gt;): void</pre>
-
-
-
-
-<hr />
-
-<strong id="property"><code>constant</code>  property</strong>
-
-
-
-<p>
-
-A decorator for class fields definition.
-
-</p>
-
-
-
-<strong>Type:</strong>
-
-<pre>(descriptor?: <a href="#classfielddescriptor">ClassFieldDescriptor</a>): (targetOrClassElement: <a href="#componentinterface">ComponentInterface</a>&lt;HTMLElement&gt;|<a href="#classelement">ClassElement</a>, propertyKey: string, originalDescriptor?: <a href="#classfielddescriptor">ClassFieldDescriptor</a>|undefined): any</pre>
-
-
-
-
-<hr />
-
-<strong id="getproperty"><code>constant</code>  getProperty</strong>
-
-
-
-<p>
-
-Retrieve property descriptor.
-
-</p>
-
-
-
-<strong>Type:</strong>
-
-<pre>(constructor: <a href="#componentconstructorinterface">ComponentConstructorInterface</a>&lt;HTMLElement&gt;, propertyKey: string): <a href="#classfielddescriptor">ClassFieldDescriptor</a></pre>
-
-
-
-
-<hr />
-
-<strong id="getproperties"><code>constant</code>  getProperties</strong>
-
-
-
-<p>
-
-Retrieve all properties descriptors.
-
-</p>
-
-
-
-<strong>Type:</strong>
-
-<pre>(constructor: <a href="#componentconstructorinterface">ComponentConstructorInterface</a>&lt;HTMLElement&gt;): {
-    [propertyKey: string]: <a href="#classfielddescriptor">ClassFieldDescriptor</a>;
+<pre>{
+  Function?: <a href="#functioncomponent">FunctionComponent</a>;
+  __proto__: <a href="#s">S</a>;
+  childNodes?: <a href="#iterablenodelist">IterableNodeList</a>;
+  end?: <a href="#node">Node</a>;
+  fragments: <a href="#context">Context</a>[];
+  is?: string;
+  isElement?: boolean;
+  isText?: boolean;
+  key?: unknown;
+  node: <a href="#t">T</a>;
+  parent?: <a href="#context">Context</a>;
+  properties: [<a href="#weakmap">WeakMap</a>, <a href="#weakmap">WeakMap</a>];
+  requestUpdate: <a href="#f">F</a>;
+  root?: <a href="#context">Context</a>;
+  slotChildNodes?: <a href="#iterablenodelist">IterableNodeList</a>;
+  start?: <a href="#node">Node</a>;
+  store: <a href="#s">S</a>;
+  tagName?: string
 }</pre>
 
-
-
-
 <hr />
 
-<strong id="defineproperties"><code>constant</code>  defineProperties</strong>
-
-
-
+<strong id="delegatedeventcallback"><code>Type</code> DelegatedEventCallback</strong>
+    
 <p>
 
-Define component constructor properties.
+Describe the signature of a delegated event callback.
 
 </p>
 
-
-
-<strong>Type:</strong>
-
-<pre>(constructor: <a href="#componentconstructorinterface">ComponentConstructorInterface</a>&lt;HTMLElement&gt;): void</pre>
-
-
-
+<pre>(event: <a href="#event">Event</a>, target?: <a href="#node">Node</a>) => unknown</pre>
 
 <hr />
 
-<strong id="defineproperty"><code>constant</code>  defineProperty</strong>
-
-
-
+<strong id="delegatedeventdescriptor"><code>Type</code> DelegatedEventDescriptor</strong>
+    
 <p>
 
-Define an observed property.
+A descriptor for an event delegation.
 
 </p>
 
-
-
-<strong>Type:</strong>
-
-<pre>(constructor: <a href="#componentconstructorinterface">ComponentConstructorInterface</a>&lt;HTMLElement&gt;, propertyKey: string, descriptor: <a href="#classfielddescriptor">ClassFieldDescriptor</a>, symbolKey?: Symbol|undefined, initializer?: Function|undefined): PropertyDescriptor</pre>
-
-
-
+<pre><a href="#addeventlisteneroptions">AddEventListenerOptions</a> & {
+  callback: <a href="#delegatedeventcallback">DelegatedEventCallback</a>;
+  target?: <a href="#eventtarget">EventTarget</a>
+}</pre>
 
 <hr />
 
-<strong id="iscomponent"><code>constant</code>  isComponent</strong>
-
-
-
+<strong id="functioncomponent"><code>Type</code> FunctionComponent&lt;P&gt;</strong>
+    
 <p>
 
-Check if a node is a component.
+A function that returns a template.
 
 </p>
 
-
-
-<strong>Type:</strong>
-
-<pre>(node: any): node is <a href="#componentinterface">ComponentInterface</a></pre>
-
-
-
+<pre>(props: <a href="#p">P</a>, context: <a href="#context">Context</a>, requestUpdate: <a href="#updaterequest">UpdateRequest</a>, isAttached: () => boolean, sameContext: <a href="#context">Context</a>) => <a href="#template">Template</a></pre>
 
 <hr />
 
-<strong id="iscomponentconstructor"><code>constant</code>  isComponentConstructor</strong>
-
-
-
+<strong id="hyperclasses"><code>Type</code> HyperClasses</strong>
+    
 <p>
 
-Check if a constructor is a component constructor.
+Classes dictionary.
 
 </p>
 
-
-
-<strong>Type:</strong>
-
-<pre>(constructor: Function): constructor is <a href="#componentconstructorinterface">ComponentConstructorInterface</a></pre>
-
-
-
+<pre>string | boolean</pre>
 
 <hr />
 
-<strong id="extend"><code>constant</code>  extend</strong>
-
-
-
+<strong id="hypercomponent"><code>Type</code> HyperComponent&lt;T extends <a href="#customelementconstructor">CustomElementConstructor</a>&gt;</strong>
+    
 <p>
 
-Get a native HTMLElement constructor to extend by its name.
+The interface of a Component constructor used as JSX tag.
 
 </p>
 
-
-
-<strong>Type:</strong>
-
-<pre>&lt;T extends {
-    constructor(): HTMLElement;
-    prototype: HTMLElement;
-}&gt;(constructor: T): <a href="#componentconstructorinterface">ComponentConstructorInterface</a>&lt;InstanceType&lt;T&gt;&gt;</pre>
-
-
-
+<pre>{
+  Component: <a href="#t">T</a>;
+  Function?: undefined;
+  [HyperObject]: true;
+  children: <a href="#template">Template</a>[];
+  isFragment?: false;
+  isSlot?: false;
+  key?: unknown;
+  namespaceURI?: string;
+  node?: undefined;
+  properties: <a href="#writable">Writable</a> & <a href="#hyperproperties">HyperProperties</a>;
+  tag?: undefined
+}</pre>
 
 <hr />
 
-<strong id="component"><code>constant</code>  Component</strong>
+<strong id="hyperfragment"><code>Type</code> HyperFragment</strong>
+    
+<p>
 
+The interface of a JSX fragment node.
 
+</p>
 
+<pre>{
+  Component?: undefined;
+  Function?: undefined;
+  [HyperObject]: true;
+  children: <a href="#template">Template</a>[];
+  isFragment: true;
+  isSlot?: false;
+  key?: unknown;
+  node?: undefined;
+  properties?: {
+  
+  };
+  tag?: undefined
+}</pre>
+
+<hr />
+
+<strong id="hyperfunction"><code>Type</code> HyperFunction</strong>
+    
+<p>
+
+The interface of a functional component.
+
+</p>
+
+<pre>{
+  Component?: undefined;
+  Function: <a href="#functioncomponent">FunctionComponent</a>;
+  [HyperObject]: true;
+  children: <a href="#template">Template</a>[];
+  isFragment?: false;
+  isSlot?: false;
+  key?: unknown;
+  namespaceURI?: string;
+  node?: undefined;
+  properties: <a href="#hyperproperties">HyperProperties</a>;
+  tag?: undefined
+}</pre>
+
+<hr />
+
+<strong id="hypernode"><code>Type</code> HyperNode&lt;T extends <a href="#node">Node</a>&gt;</strong>
+    
+<p>
+
+The interface of an HTML node used as JSX tag.
+
+</p>
+
+<pre>{
+  Component?: undefined;
+  Function?: undefined;
+  [HyperObject]: true;
+  children: <a href="#template">Template</a>[];
+  isFragment?: false;
+  isSlot?: false;
+  key?: unknown;
+  namespaceURI?: string;
+  node: <a href="#t">T</a>;
+  properties: <a href="#writable">Writable</a> & <a href="#hyperproperties">HyperProperties</a>;
+  tag?: undefined
+}</pre>
+
+<hr />
+
+<strong id="hyperproperties"><code>Type</code> HyperProperties</strong>
+    
+<p>
+
+Properties used by the render engine.
+They can be assigned to a node but they are not part of the node prototype.
+
+</p>
+
+<pre>{
+  children?: <a href="#template">Template</a>[];
+  class?: <a href="#hyperclasses">HyperClasses</a>;
+  is?: string;
+  key?: unknown;
+  slot?: string;
+  style?: <a href="#hyperstyle">HyperStyle</a>;
+  xmlns?: string
+}</pre>
+
+<hr />
+
+<strong id="hyperslot"><code>Type</code> HyperSlot</strong>
+    
+<p>
+
+The interface of slot element.
+
+</p>
+
+<pre>{
+  Component?: undefined;
+  Function?: undefined;
+  [HyperObject]: true;
+  children: <a href="#template">Template</a>[];
+  isFragment?: false;
+  isSlot: true;
+  key?: unknown;
+  node?: undefined;
+  properties: <a href="#writable">Writable</a> & <a href="#hyperproperties">HyperProperties</a>;
+  tag: slot
+}</pre>
+
+<hr />
+
+<strong id="hyperstyle"><code>Type</code> HyperStyle</strong>
+    
+<p>
+
+Styles dictionary.
+
+</p>
+
+<pre>string | string</pre>
+
+<hr />
+
+<strong id="hypertag"><code>Type</code> HyperTag&lt;T extends &gt;</strong>
+    
+<p>
+
+The interface of a generic JSX tag.
+
+</p>
+
+<pre>{
+  Component?: undefined;
+  Function?: undefined;
+  [HyperObject]: true;
+  children: <a href="#template">Template</a>[];
+  isFragment?: false;
+  isSlot?: false;
+  key?: unknown;
+  namespaceURI?: string;
+  node?: undefined;
+  properties: <a href="#writable">Writable</a> & <a href="#hyperproperties">HyperProperties</a>;
+  tag: <a href="#t">T</a>
+}</pre>
+
+<hr />
+
+<strong id="observable"><code>Type</code> Observable&lt;T&gt;</strong>
+    
+<p>
+
+Observable-like minimal interface.
+
+</p>
+
+<pre>{
+  pipe(operator: (value: <a href="#t">T</a>) => unknown): <a href="#observable">Observable</a>;
+  subscribe(nextCallback: (value: <a href="#t">T</a>) => unknown, errorCallback: (error: <a href="#error">Error</a>) => unknown, completeCallback: () => unknown): <a href="#subscription">Subscription</a>
+}</pre>
+
+<hr />
+
+<strong id="propertydeclaration"><code>Type</code> PropertyDeclaration&lt;TypeConstructorHint extends <a href="#constructor">Constructor</a>&gt;</strong>
+    
+<p>
+
+A state property declaration.
+
+</p>
+
+<pre><a href="#propertydescriptor">PropertyDescriptor</a> & {
+  attribute?: boolean | string;
+  defaultValue?: <a href="#convertconstructortypes">ConvertConstructorTypes</a>;
+  event?: true | string;
+  fromAttribute?: (value: string | null) => <a href="#convertconstructortypes">ConvertConstructorTypes</a> | undefined;
+  get?: ;
+  getter?: (value?: <a href="#convertconstructortypes">ConvertConstructorTypes</a>) => <a href="#returntype">ReturnType</a>;
+  initializer?: <a href="#function">Function</a>;
+  observe?: <a href="#propertyobserver">PropertyObserver</a>;
+  observers?: <a href="#propertyobserver">PropertyObserver</a>[];
+  set?: ;
+  setter?: (newValue?: ) => <a href="#convertconstructortypes">ConvertConstructorTypes</a>;
+  state?: boolean;
+  symbol?: symbol;
+  toAttribute?: (value: <a href="#convertconstructortypes">ConvertConstructorTypes</a>) => string | null | undefined;
+  type?: <a href="#typeconstructorhint">TypeConstructorHint</a> | <a href="#typeconstructorhint">TypeConstructorHint</a>[];
+  validate?: (value: unknown) => boolean
+}</pre>
+
+<hr />
+
+<strong id="propertyobserver"><code>Type</code> PropertyObserver&lt;TypeHint&gt;</strong>
+    
+<p>
+
+The observer signature for properties.
+
+</p>
+
+<pre>(oldValue: <a href="#typehint">TypeHint</a> | undefined, newValue: <a href="#typehint">TypeHint</a>, propertyKey: string) => void</pre>
+
+<hr />
+
+<strong id="template"><code>Type</code> Template</strong>
+    
+<p>
+
+A generic template. Can be a single atomic item or a list of items.
+
+</p>
+
+<pre><a href="#element">Element</a> | <a href="#text">Text</a> | <a href="#node">Node</a> | <a href="#hyperfragment">HyperFragment</a> | <a href="#hyperfunction">HyperFunction</a> | <a href="#hypercomponent">HyperComponent</a> | <a href="#hypernode">HyperNode</a> | <a href="#hyperslot">HyperSlot</a> | <a href="#hypertag">HyperTag</a> | <a href="#promise">Promise</a> | <a href="#observable">Observable</a> | string | number | boolean | undefined | null | <a href="#template">Template</a>[]</pre>
+
+<hr />
+
+<strong id="component"><code>Variable</code> Component</strong>
+    
 <p>
 
 The DNA base Component constructor, a Custom Element constructor with
@@ -880,598 +590,1327 @@ All DNA components **must** extends this class.
 
 </p>
 
-
-
-<strong>Type:</strong>
-
-<pre><a href="#componentconstructorinterface">ComponentConstructorInterface</a>&lt;HTMLElement&gt;</pre>
-
-
-
+<pre><a href="#componentconstructor">ComponentConstructor</a></pre>
 
 <hr />
 
-<strong id="until"><code>constant</code>  until</strong>
-
-
-
+<strong id="dom"><code>Variable</code> DOM</strong>
+    
 <p>
 
-It renders the template when then provided Thenable is in pending status.
+DOM is a singleton that components uses to access DOM methods.
+By default, it uses browsers' DOM implementation, but it can be set to use a different one.
+For example, in a Node context it is possibile to use DNA thanks to the `jsdom` dom implementation.
+It also handle element life cycle for custom elements unless otherwise specified.
 
 </p>
 
-
-
-<strong>Type:</strong>
-
-<pre>(thenable: Promise&lt;any&gt;, template: <a href="#template">Template</a>): Promise&lt;boolean&gt;</pre>
-
-
-
+<pre>{
+  createDocumentFragment: () => <a href="#documentfragment">DocumentFragment</a>;
+  createTextNode: (data: string) => <a href="#text">Text</a>;
+  appendChild&lt;T extends <a href="#node">Node</a>&gt;(parent: <a href="#node">Node</a>, newChild: <a href="#t">T</a>, slot: boolean): <a href="#t">T</a>;
+  createComment(data: string): <a href="#comment">Comment</a>;
+  createElement&lt;K extends &gt;(qualifiedName: <a href="#k">K</a>, options?: <a href="#elementcreationoptions">ElementCreationOptions</a>): ;
+  createElementNS(namespaceURI: null | string, qualifiedName: string): <a href="#element">Element</a>;
+  createEvent(typeArg: string, eventInitDict: <a href="#customeventinit">CustomEventInit</a>): <a href="#customevent">CustomEvent</a>;
+  getAttribute(element: <a href="#element">Element</a>, qualifiedName: string): null | string;
+  hasAttribute(element: <a href="#element">Element</a>, qualifiedName: string): boolean;
+  insertAdjacentElement(parent: <a href="#element">Element</a>, position: <a href="#insertposition">InsertPosition</a>, insertedElement: <a href="#element">Element</a>, slot: boolean): null | <a href="#element">Element</a>;
+  insertBefore&lt;T extends <a href="#node">Node</a>&gt;(parent: <a href="#node">Node</a>, newChild: <a href="#t">T</a>, refChild: null | <a href="#node">Node</a>, slot: boolean): <a href="#t">T</a>;
+  removeAttribute(element: <a href="#element">Element</a>, qualifiedName: string): void;
+  removeChild&lt;T extends <a href="#node">Node</a>&gt;(parent: <a href="#node">Node</a>, oldChild: <a href="#t">T</a>, slot: boolean): <a href="#t">T</a>;
+  replaceChild&lt;T extends <a href="#node">Node</a>&gt;(parent: <a href="#node">Node</a>, newChild: <a href="#node">Node</a>, oldChild: <a href="#t">T</a>, slot: boolean): <a href="#t">T</a>;
+  setAttribute(element: <a href="#element">Element</a>, qualifiedName: string, value: string): void
+}</pre>
 
 <hr />
 
-<strong id="namespaceuri"><code>enum</code>  NamespaceURI</strong>
-
-
-
+<strong id="fragment"><code>Variable</code> Fragment</strong>
+    
 <p>
 
-A list of namespaceURI bound with their tagName.
+A constructor alias used for JSX fragments </>.
 
 </p>
 
+<pre></pre>
 
+<hr />
+
+<strong id="hyperobject"><code>Variable</code> HyperObject</strong>
+    
+<p>
+
+Identify hyper objects..
+
+</p>
+
+<pre></pre>
+
+<hr />
+
+<strong id="customelements"><code>Variable</code> customElements</strong>
+    
+<p>
+
+The global DNA registry instance.
+
+</p>
+
+<pre><a href="#customelementregistry">CustomElementRegistry</a></pre>
+
+<hr />
+
+<strong id="window"><code>Variable</code> window</strong>
+    
+
+<pre><a href="#window">Window</a> & <a href="#globalthis">globalThis</a></pre>
+
+<hr />
+
+<strong id="compile"><code>Function</code> compile</strong>
+
+<details>
+<summary>
+    <code>(string: string): <a href="#template">Template</a></code>
+</summary>
+
+<strong>Params</strong>
 <table>
     <thead>
-        <th align="left">Member</th>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
         <th align="left">Description</th>
-        <th align="left">Value</th>
     </thead>
     <tbody>
         <tr>
-            <td>svg</td>
+            <td>string</td>
+            <td><code>string</code></td>
+            <td align="center"></td>
             <td></td>
-            <td><code>"http://www.w3.org/2000/svg"</code></td>
         </tr>
     </tbody>
 </table>
 
+<strong>Returns</strong>: <code><a href="#template">Template</a></code> The virtual DOM template.
 
-
-
-
-
+</details>
 
 <hr />
 
-<strong id="componentconstructorinterface"><code>type</code>  ComponentConstructorInterface</strong>
+<strong id="connect"><code>Function</code> connect</strong>
 
-<p>
+<details>
+<summary>
+    <code>(node: <a href="#node">Node</a>, force: boolean): void</code>
+</summary>
 
-The basic DNA Component interface.
-It's a Custom Element, but with some extra useful method.
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>node</td>
+            <td><code><a href="#node">Node</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>force</td>
+            <td><code>boolean</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
 
-</p>
+<strong>Returns</strong>: <code>void</code> 
 
-
-
-<pre>{
-    observedAttributes: string[];
-    properties?: {
-        [key: string]: <a href="#classfielddescriptor">ClassFieldDescriptor</a>|Function|Function[];
-    };
-    listeners?: {
-        [key: string]: <a href="#delegatedeventcallback">DelegatedEventCallback</a>|<a href="#delegatedeventdescriptor">DelegatedEventDescriptor</a>;
-    };
-    shim?: boolean;
-    constructor(node?: HTMLElement, properties?: {
-        [key: string]: any;
-    }): <a href="#componentinterface">ComponentInterface</a>&lt;T&gt;;
-    constructor(properties?: {
-        [key: string]: any;
-    }): <a href="#componentinterface">ComponentInterface</a>&lt;T&gt;;
-    constructor(): <a href="#componentinterface">ComponentInterface</a>&lt;T&gt;;
-    prototype: <a href="#componentinterface">ComponentInterface</a>&lt;T&gt;;
-}</pre>
-
-<strong>See also</strong>
-
-* [W3C specification][https://w3c.github.io/webcomponents/spec/custom/](https://w3c.github.io/webcomponents/spec/custom/).
-
-
-<hr />
-
-<strong id="classfielddescriptor"><code>type</code>  ClassFieldDescriptor</strong>
-
-<p>
-
-A list of properties for an class field description.
-
-</p>
-
-
-
-<pre>PropertyDescriptor & {
-    name?: PropertyKey;
-    attribute?: true|string;
-    defaultValue?: any;
-    type?: Function|Function[];
-    fromAttribute?: <a href="#classfieldattributeconverter">ClassFieldAttributeConverter</a>;
-    toAttribute?: <a href="#classfieldpropertyconverter">ClassFieldPropertyConverter</a>;
-    observe?: <a href="#classfieldobserver">ClassFieldObserver</a>;
-    observers?: <a href="#classfieldobserver">ClassFieldObserver</a>[];
-    validate?: <a href="#classfieldvalidator">ClassFieldValidator</a>;
-    getter?: (value?: any): any;
-    setter?: (newValue?: any): any;
-    event?: true|string;
-    symbol?: Symbol;
-    initializer?: Function;
-}</pre>
-
-
-
+</details>
 
 <hr />
 
-<strong id="classfieldattributeconverter"><code>type</code>  ClassFieldAttributeConverter</strong>
+<strong id="css"><code>Function</code> css</strong>
 
-<p>
+<details>
+<summary>
+    <code>(name: string, cssText: string, extend?: string): string</code>
+</summary>
 
-Convert attribute to property value.
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>name</td>
+            <td><code>string</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>cssText</td>
+            <td><code>string</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>extend</td>
+            <td><code>string</code></td>
+            <td align="center">✓</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
 
-</p>
+<strong>Returns</strong>: <code>string</code> A scoped CSS string.
 
-
-
-<pre>(value: string|null): any</pre>
-
-
-
-
-<hr />
-
-<strong id="classfieldpropertyconverter"><code>type</code>  ClassFieldPropertyConverter</strong>
-
-<p>
-
-Convert property to attribute value.
-
-</p>
-
-
-
-<pre>(value: any): string|null|undefined</pre>
-
-
-
-
-<hr />
-
-<strong id="classfieldobserver"><code>type</code>  ClassFieldObserver</strong>
-
-<p>
-
-The observer signature for class fields.
-
-</p>
-
-
-
-<pre>(oldValue: any, newValue: any): any</pre>
-
-
-
+</details>
 
 <hr />
 
-<strong id="classfieldvalidator"><code>type</code>  ClassFieldValidator</strong>
+<strong id="customelement"><code>Function</code> customElement</strong>
 
-<p>
+<details>
+<summary>
+    <code>(name: string, options?: <a href="#elementdefinitionoptions">ElementDefinitionOptions</a>): (classOrDescriptor: <a href="#componentconstructor">ComponentConstructor</a> | <a href="#classdescriptor">ClassDescriptor</a>) => any</code>
+</summary>
 
-A validation function for the class field.
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>name</td>
+            <td><code>string</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>options</td>
+            <td><code><a href="#elementdefinitionoptions">ElementDefinitionOptions</a></code></td>
+            <td align="center">✓</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
 
-</p>
+<strong>Returns</strong>: <code>(classOrDescriptor: <a href="#componentconstructor">ComponentConstructor</a> | <a href="#classdescriptor">ClassDescriptor</a>) => any</code> The decorated component class.
 
-
-
-<pre>(value: any): boolean</pre>
-
-
-
-
-<hr />
-
-<strong id="delegatedeventcallback"><code>type</code>  DelegatedEventCallback</strong>
-
-<p>
-
-Describe the signature of a delegated event callback.
-
-</p>
-
-
-
-<pre>(event: Event, target?: Node): any</pre>
-
-
-
-
-<hr />
-
-<strong id="delegatedeventdescriptor"><code>type</code>  DelegatedEventDescriptor</strong>
-
-<p>
-
-A descriptor for an event delegation.
-
-</p>
-
-
-
-<pre>AddEventListenerOptions & {
-    callback: <a href="#delegatedeventcallback">DelegatedEventCallback</a>;
-}</pre>
-
-
-
+</details>
 
 <hr />
 
-<strong id="componentinterface"><code>type</code>  ComponentInterface</strong>
+<strong id="definelisteners"><code>Function</code> defineListeners</strong>
 
+<details>
+<summary>
+    <code>(prototype: <a href="#component">Component</a> & <a href="#htmlelement">HTMLElement</a>): void</code>
+</summary>
 
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>prototype</td>
+            <td><code><a href="#component">Component</a> & <a href="#htmlelement">HTMLElement</a></code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
 
+<strong>Returns</strong>: <code>void</code> 
 
-
-<pre>T & {
-    is: string;
-    [COMPONENT_SYMBOL]: boolean;
-    [CONSTRUCTED_SYMBOL]: boolean;
-    slotChildNodes: <a href="#iterablenodelist">IterableNodeList</a>;
-    adoptedStyleSheets?: CSSStyleSheet[];
-    constructor: <a href="#componentconstructorinterface">ComponentConstructorInterface</a>&lt;T&gt;;
-    initialize(properties?: {
-        [key: string]: any;
-    }): void;
-    connectedCallback(): void;
-    disconnectedCallback(): void;
-    attributeChangedCallback(attributeName: string, oldValue: null|string, newValue: null|string): void;
-    propertyChangedCallback(propertyName: string, oldValue: any, newValue: any): void;
-    render(): <a href="#template">Template</a>;
-    forceUpdate(): void;
-    observe(propertyName: string, callback: <a href="#classfieldobserver">ClassFieldObserver</a>): void;
-    unobserve(propertyName: string, callback: <a href="#classfieldobserver">ClassFieldObserver</a>): void;
-    dispatchEvent(event: Event): boolean;
-    dispatchEvent(event: string, detail?: any, bubbles?: boolean, cancelable?: boolean, composed?: boolean): boolean;
-    dispatchAsyncEvent(event: Event): Promise&lt;any[]&gt;;
-    dispatchAsyncEvent(event: string, detail?: any, bubbles?: boolean, cancelable?: boolean, composed?: boolean): Promise&lt;any[]&gt;;
-    delegateEventListener(event: string, selector: string|null, callback: <a href="#delegatedeventcallback">DelegatedEventCallback</a>): void;
-    undelegateEventListener(event?: string, selector?: string|null, callback?: <a href="#delegatedeventcallback">DelegatedEventCallback</a>): void;
-    emulateLifeCycle(): void;
-}</pre>
-
-
-
+</details>
 
 <hr />
 
-<strong id="iterablenodelist"><code>type</code>  IterableNodeList</strong>
+<strong id="defineproperties"><code>Function</code> defineProperties</strong>
 
+<details>
+<summary>
+    <code>&lt;T extends <a href="#component">Component</a> & <a href="#htmlelement">HTMLElement</a>&gt;(prototype: <a href="#t">T</a>): void</code>
+</summary>
 
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>prototype</td>
+            <td><code><a href="#t">T</a></code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
 
+<strong>Returns</strong>: <code>void</code> 
 
-
-<pre>Node[] & {
-    item(index: number): Node|null;
-}</pre>
-
-
-
-
-<hr />
-
-<strong id="template"><code>type</code>  Template</strong>
-
-<p>
-
-A generic template. Can be a single atomic item or a list of items.
-
-</p>
-
-
-
-<pre><a href="#templateitem">TemplateItem</a>|<a href="#templateitems">TemplateItems</a></pre>
-
-
-
-
-<hr />
-
-<strong id="templateitem"><code>type</code>  TemplateItem</strong>
-
-<p>
-
-The atomic template item.
-It can be a node, a Hyper or Interpolate function or a primitive value.
-
-</p>
-
-
-
-<pre>Element|Text|Node|<a href="#hypernode">HyperNode</a>|Promise&lt;any&gt;|<a href="#observable">Observable</a>&lt;any&gt;|string|number|boolean|undefined|null</pre>
-
-
-
+</details>
 
 <hr />
 
-<strong id="hypernode"><code>type</code>  HyperNode</strong>
+<strong id="defineproperty"><code>Function</code> defineProperty</strong>
 
-<p>
+<details>
+<summary>
+    <code>&lt;T extends <a href="#component">Component</a> & <a href="#htmlelement">HTMLElement</a>, P extends string | number | symbol&gt;(prototype: <a href="#withproperties">WithProperties</a>, propertyKey: <a href="#p">P</a>, declaration: <a href="#propertydeclaration">PropertyDeclaration</a>, symbolKey: symbol): <a href="#propertydescriptor">PropertyDescriptor</a></code>
+</summary>
 
-A virtual description of a Node, generate by the `h` helper and used in the render function.
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>prototype</td>
+            <td><code><a href="#withproperties">WithProperties</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>propertyKey</td>
+            <td><code><a href="#p">P</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>declaration</td>
+            <td><code><a href="#propertydeclaration">PropertyDeclaration</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>symbolKey</td>
+            <td><code>symbol</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
 
-</p>
+<strong>Returns</strong>: <code><a href="#propertydescriptor">PropertyDescriptor</a></code> The final descriptor.
 
-
-
-<pre>{
-    node?: Node;
-    Component?: <a href="#componentconstructorinterface">ComponentConstructorInterface</a>&lt;HTMLElement&gt;;
-    Function?: <a href="#templatefunction">TemplateFunction</a>;
-    tag?: string;
-    is?: string;
-    key?: any;
-    isFragment?: boolean;
-    isSlot?: boolean;
-    namespaceURI?: <a href="#namespaceuri">NamespaceURI</a>;
-    properties: <a href="#hyperproperties">HyperProperties</a>;
-    children: <a href="#templateitems">TemplateItems</a>;
-}</pre>
-
-
-
-
-<hr />
-
-<strong id="templatefunction"><code>type</code>  TemplateFunction</strong>
-
-<p>
-
-A function that returns a template.
-
-</p>
-
-
-
-<pre>(props: <a href="#hyperproperties">HyperProperties</a>, state: Map&lt;string, any&gt;, update: (): boolean, live: (): boolean, context: <a href="#context">Context</a>): <a href="#template">Template</a></pre>
-
-
-
-
-<hr />
-
-<strong id="hyperproperties"><code>type</code>  HyperProperties</strong>
-
-<p>
-
-The properties of a HyperNode.
-
-</p>
-
-
-
-<pre>{
-    is?: string;
-    slot?: string;
-    key?: any;
-    xlmns?: <a href="#namespaceuri">NamespaceURI</a>;
-    children?: <a href="#templateitems">TemplateItems</a>;
-    class?: <a href="#hyperclasses">HyperClasses</a>;
-    [key: string]: any;
-}</pre>
-
-
-
+</details>
 
 <hr />
 
-<strong id="templateitems"><code>type</code>  TemplateItems</strong>
+<strong id="delegateeventlistener"><code>Function</code> delegateEventListener</strong>
 
-<p>
+<details>
+<summary>
+    <code>(element: <a href="#element">Element</a>, eventName: string, selector: null | string, callback: <a href="#delegatedeventcallback">DelegatedEventCallback</a>, options?: <a href="#addeventlisteneroptions">AddEventListenerOptions</a>): void</code>
+</summary>
 
-A list of template items.
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>element</td>
+            <td><code><a href="#element">Element</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>eventName</td>
+            <td><code>string</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>selector</td>
+            <td><code>null | string</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>callback</td>
+            <td><code><a href="#delegatedeventcallback">DelegatedEventCallback</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>options</td>
+            <td><code><a href="#addeventlisteneroptions">AddEventListenerOptions</a></code></td>
+            <td align="center">✓</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
 
-</p>
+<strong>Returns</strong>: <code>void</code> 
 
-
-
-<pre><a href="#templateitem">TemplateItem</a>[]</pre>
-
-
-
-
-<hr />
-
-<strong id="hyperclasses"><code>type</code>  HyperClasses</strong>
-
-<p>
-
-Classes dictionary.
-
-</p>
-
-
-
-<pre>string|{
-    [key: string]: boolean;
-}</pre>
-
-
-
-
-<hr />
-
-<strong id="context"><code>type</code>  Context</strong>
-
-<p>
-
-The node context interface.
-
-</p>
-
-
-
-<pre>{
-    isElement?: boolean;
-    isText?: boolean;
-    tagName?: string;
-    is?: string;
-    key?: any;
-    props: [<a href="#propertiesmap">PropertiesMap</a>, <a href="#propertiesmap">PropertiesMap</a>];
-    state: Map&lt;string, any&gt;;
-    childNodes?: <a href="#iterablenodelist">IterableNodeList</a>;
-    slotChildNodes?: <a href="#iterablenodelist">IterableNodeList</a>;
-    first?: Node;
-    last?: Node;
-    function?: <a href="#templatefunction">TemplateFunction</a>;
-    fragments: <a href="#context">Context</a>[];
-    parent?: <a href="#context">Context</a>;
-    root?: <a href="#context">Context</a>;
-}</pre>
-
-
-
+</details>
 
 <hr />
 
-<strong id="propertiesmap"><code>type</code>  PropertiesMap</strong>
+<strong id="disconnect"><code>Function</code> disconnect</strong>
 
-<p>
+<details>
+<summary>
+    <code>(node: <a href="#node">Node</a>): void</code>
+</summary>
 
-A map of properties for each context.
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>node</td>
+            <td><code><a href="#node">Node</a></code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
 
-</p>
+<strong>Returns</strong>: <code>void</code> 
 
-
-
-<pre>WeakMap&lt;<a href="#context">Context</a>, {
-    [key: string]: any;
-}&gt;</pre>
-
-
-
-
-<hr />
-
-<strong id="observable"><code>type</code>  Observable</strong>
-
-<p>
-
-Observable-like minimal interface.
-
-</p>
-
-
-
-<pre>{
-    pipe(operator: (value: T): any): <a href="#observable">Observable</a>&lt;T&gt;;
-    subscribe(nextCallback: (value: T): any, errorCallback: (error: Error): any, completeCallback: (): any): <a href="#subscription">Subscription</a>;
-}</pre>
-
-
-
+</details>
 
 <hr />
 
-<strong id="subscription"><code>type</code>  Subscription</strong>
+<strong id="dispatchasyncevent"><code>Function</code> dispatchAsyncEvent</strong>
 
-<p>
+<details>
+<summary>
+    <code>(element: <a href="#element">Element</a>, event: string | <a href="#event">Event</a>, detail?: any, bubbles: boolean, cancelable: boolean, composed: boolean): <a href="#promise">Promise</a></code>
+</summary>
 
-Subscription-like minimal interface.
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>element</td>
+            <td><code><a href="#element">Element</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>event</td>
+            <td><code>string | <a href="#event">Event</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>detail</td>
+            <td><code>any</code></td>
+            <td align="center">✓</td>
+            <td></td></tr>
+<tr>
+            <td>bubbles</td>
+            <td><code>boolean</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>cancelable</td>
+            <td><code>boolean</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>composed</td>
+            <td><code>boolean</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
 
-</p>
+<strong>Returns</strong>: <code><a href="#promise">Promise</a></code> 
 
-
-
-<pre>{
-    unsubscribe(): void;
-}</pre>
-
-
-
-
-<hr />
-
-<strong id="classdescriptor"><code>type</code>  ClassDescriptor</strong>
-
-<p>
-
-The class descriptor interface.
-
-</p>
-
-
-
-<pre>{
-    kind: 'class';
-    elements: <a href="#classelement">ClassElement</a>[];
-    finisher?: &lt;T&gt;(constructor: {
-        constructor(): T;
-    }): undefined|{
-        constructor(): T;
-    };
-}</pre>
-
-
-
-
-<hr />
-
-<strong id="classelement"><code>type</code>  ClassElement</strong>
-
-<p>
-
-Decorator class element descriptor.
-
-</p>
-
-
-
-<pre></pre>
-
-
-
+</details>
 
 <hr />
 
-<strong id="templatefilter"><code>type</code>  TemplateFilter</strong>
+<strong id="dispatchevent"><code>Function</code> dispatchEvent</strong>
 
-<p>
+<details>
+<summary>
+    <code>(element: <a href="#element">Element</a>, event: string | <a href="#event">Event</a>, detail?: any, bubbles: boolean, cancelable: boolean, composed: boolean): boolean</code>
+</summary>
 
-A filter function signature for template items.
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>element</td>
+            <td><code><a href="#element">Element</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>event</td>
+            <td><code>string | <a href="#event">Event</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>detail</td>
+            <td><code>any</code></td>
+            <td align="center">✓</td>
+            <td></td></tr>
+<tr>
+            <td>bubbles</td>
+            <td><code>boolean</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>cancelable</td>
+            <td><code>boolean</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>composed</td>
+            <td><code>boolean</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
 
-</p>
+<strong>Returns</strong>: <code>boolean</code> 
 
-
-
-<pre>(item: Node): boolean</pre>
-
-
-
+</details>
 
 <hr />
 
-<strong id="asyncevent"><code>type</code>  AsyncEvent</strong>
+<strong id="extend"><code>Function</code> extend</strong>
 
+<details>
+<summary>
+    <code>&lt;T extends <a href="#htmlelement">HTMLElement</a>&gt;(constructor: <a href="#constructor">Constructor</a>): <a href="#componentconstructor">ComponentConstructor</a></code>
+</summary>
 
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>constructor</td>
+            <td><code><a href="#constructor">Constructor</a></code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
 
+<strong>Returns</strong>: <code><a href="#componentconstructor">ComponentConstructor</a></code> A proxy that extends the native constructor.
 
+</details>
 
-<pre>Event & {
-    respondWith(callback: (): Promise&lt;any&gt;): void;
-}</pre>
+<hr />
 
+<strong id="getproperties"><code>Function</code> getProperties</strong>
 
+<details>
+<summary>
+    <code>&lt;T extends <a href="#component">Component</a> & <a href="#htmlelement">HTMLElement</a>&gt;(prototype: <a href="#withproperties">WithProperties</a>): <a href="#propertiesof">PropertiesOf</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>prototype</td>
+            <td><code><a href="#withproperties">WithProperties</a></code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code><a href="#propertiesof">PropertiesOf</a></code> A list of property descriptors.
+
+</details>
+
+<hr />
+
+<strong id="getproperty"><code>Function</code> getProperty</strong>
+
+<details>
+<summary>
+    <code>&lt;T extends <a href="#component">Component</a> & <a href="#htmlelement">HTMLElement</a>, P extends string | number | symbol&gt;(prototype: <a href="#t">T</a>, propertyKey: <a href="#p">P</a>, failIfMissing: boolean): </code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>prototype</td>
+            <td><code><a href="#t">T</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>propertyKey</td>
+            <td><code><a href="#p">P</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>failIfMissing</td>
+            <td><code>boolean</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code></code> The property declaration.
+
+</details>
+
+<hr />
+
+<strong id="h"><code>Function</code> h</strong>
+
+<details>
+<summary>
+    <code>(tagOrComponent: <a href="#fragment">Fragment</a>, properties: null, children: <a href="#template">Template</a>[]): <a href="#hyperfragment">HyperFragment</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>tagOrComponent</td>
+            <td><code><a href="#fragment">Fragment</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>properties</td>
+            <td><code>null</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>children</td>
+            <td><code><a href="#template">Template</a>[]</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code><a href="#hyperfragment">HyperFragment</a></code> 
+
+</details>
+<details>
+<summary>
+    <code>&lt;T extends <a href="#functioncomponent">FunctionComponent</a>&gt;(tagOrComponent: <a href="#t">T</a>, properties: <a href="#hyperproperties">HyperProperties</a> | null, children: <a href="#template">Template</a>[]): <a href="#hyperfunction">HyperFunction</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>tagOrComponent</td>
+            <td><code><a href="#t">T</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>properties</td>
+            <td><code><a href="#hyperproperties">HyperProperties</a> | null</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>children</td>
+            <td><code><a href="#template">Template</a>[]</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code><a href="#hyperfunction">HyperFunction</a></code> 
+
+</details>
+<details>
+<summary>
+    <code>&lt;T extends <a href="#customelementconstructor">CustomElementConstructor</a>&gt;(tagOrComponent: <a href="#t">T</a>, properties: <a href="#writable">Writable</a> & <a href="#hyperproperties">HyperProperties</a> | null, children: <a href="#template">Template</a>[]): <a href="#hypercomponent">HyperComponent</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>tagOrComponent</td>
+            <td><code><a href="#t">T</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>properties</td>
+            <td><code><a href="#writable">Writable</a> & <a href="#hyperproperties">HyperProperties</a> | null</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>children</td>
+            <td><code><a href="#template">Template</a>[]</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code><a href="#hypercomponent">HyperComponent</a></code> 
+
+</details>
+<details>
+<summary>
+    <code>&lt;T extends <a href="#node">Node</a>&gt;(tagOrComponent: <a href="#t">T</a>, properties: <a href="#writable">Writable</a> & <a href="#hyperproperties">HyperProperties</a> | null, children: <a href="#template">Template</a>[]): <a href="#hypernode">HyperNode</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>tagOrComponent</td>
+            <td><code><a href="#t">T</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>properties</td>
+            <td><code><a href="#writable">Writable</a> & <a href="#hyperproperties">HyperProperties</a> | null</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>children</td>
+            <td><code><a href="#template">Template</a>[]</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code><a href="#hypernode">HyperNode</a></code> 
+
+</details>
+<details>
+<summary>
+    <code>(tagOrComponent: slot, properties: <a href="#writable">Writable</a> & <a href="#hyperproperties">HyperProperties</a> | null, children: <a href="#template">Template</a>[]): <a href="#hyperslot">HyperSlot</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>tagOrComponent</td>
+            <td><code>slot</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>properties</td>
+            <td><code><a href="#writable">Writable</a> & <a href="#hyperproperties">HyperProperties</a> | null</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>children</td>
+            <td><code><a href="#template">Template</a>[]</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code><a href="#hyperslot">HyperSlot</a></code> 
+
+</details>
+<details>
+<summary>
+    <code>&lt;T extends symbol | object | a | abbr | address | applet | area | article | aside | audio | b | base | basefont | bdi | bdo | blockquote | body | br | button | canvas | caption | cite | code | col | colgroup | data | datalist | dd | del | details | dfn | dialog | dir | div | dl | dt | em | embed | fieldset | figcaption | figure | font | footer | form | frame | frameset | h1 | h2 | h3 | h4 | h5 | h6 | head | header | hgroup | hr | html | i | iframe | img | input | ins | kbd | label | legend | li | link | main | map | mark | marquee | menu | meta | meter | nav | noscript | ol | optgroup | option | output | p | param | picture | pre | progress | q | rp | rt | ruby | s | samp | script | section | select | slot | small | source | span | strong | style | sub | summary | sup | table | tbody | td | template | textarea | tfoot | th | thead | time | title | tr | track | u | ul | var | video | wbr | circle | clipPath | defs | desc | ellipse | feBlend | feColorMatrix | feComponentTransfer | feComposite | feConvolveMatrix | feDiffuseLighting | feDisplacementMap | feDistantLight | feFlood | feFuncA | feFuncB | feFuncG | feFuncR | feGaussianBlur | feImage | feMerge | feMergeNode | feMorphology | feOffset | fePointLight | feSpecularLighting | feSpotLight | feTile | feTurbulence | filter | foreignObject | g | image | line | linearGradient | marker | mask | metadata | path | pattern | polygon | polyline | radialGradient | rect | stop | svg | switch | text | textPath | tspan | use | view&gt;(tagOrComponent: <a href="#t">T</a>, properties: <a href="#writable">Writable</a> & <a href="#hyperproperties">HyperProperties</a> | null, children: <a href="#template">Template</a>[]): <a href="#hypertag">HyperTag</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>tagOrComponent</td>
+            <td><code><a href="#t">T</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>properties</td>
+            <td><code><a href="#writable">Writable</a> & <a href="#hyperproperties">HyperProperties</a> | null</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>children</td>
+            <td><code><a href="#template">Template</a>[]</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code><a href="#hypertag">HyperTag</a></code> 
+
+</details>
+
+<hr />
+
+<strong id="html"><code>Function</code> html</strong>
+
+<details>
+<summary>
+    <code>(string: <a href="#templatestringsarray">TemplateStringsArray</a>, values: unknown[]): <a href="#template">Template</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>string</td>
+            <td><code><a href="#templatestringsarray">TemplateStringsArray</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>values</td>
+            <td><code>unknown[]</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code><a href="#template">Template</a></code> The virtual DOM template.
+
+</details>
+<details>
+<summary>
+    <code>(string: string): <a href="#template">Template</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>string</td>
+            <td><code>string</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code><a href="#template">Template</a></code> The virtual DOM template.
+
+</details>
+
+<hr />
+
+<strong id="iscomponent"><code>Function</code> isComponent</strong>
+
+<details>
+<summary>
+    <code>(node: <a href="#withcomponentflag">WithComponentFlag</a>): node is <a href="#component">Component</a> & <a href="#htmlelement">HTMLElement</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>node</td>
+            <td><code><a href="#withcomponentflag">WithComponentFlag</a></code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code>node is <a href="#component">Component</a> & <a href="#htmlelement">HTMLElement</a></code> 
+
+</details>
+
+<hr />
+
+<strong id="iscomponentconstructor"><code>Function</code> isComponentConstructor</strong>
+
+<details>
+<summary>
+    <code>(constructor: <a href="#function">Function</a>): constructor is <a href="#componentconstructor">ComponentConstructor</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>constructor</td>
+            <td><code><a href="#function">Function</a></code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code>constructor is <a href="#componentconstructor">ComponentConstructor</a></code> 
+
+</details>
+
+<hr />
+
+<strong id="listen"><code>Function</code> listen</strong>
+
+<details>
+<summary>
+    <code>(eventName: string, options?: <a href="#addeventlisteneroptions">AddEventListenerOptions</a>): <a href="#function">Function</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>eventName</td>
+            <td><code>string</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>options</td>
+            <td><code><a href="#addeventlisteneroptions">AddEventListenerOptions</a></code></td>
+            <td align="center">✓</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code><a href="#function">Function</a></code> The decorator initializer.
+
+</details>
+<details>
+<summary>
+    <code>(eventName: string, selector: string, options?: <a href="#addeventlisteneroptions">AddEventListenerOptions</a>): <a href="#function">Function</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>eventName</td>
+            <td><code>string</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>selector</td>
+            <td><code>string</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>options</td>
+            <td><code><a href="#addeventlisteneroptions">AddEventListenerOptions</a></code></td>
+            <td align="center">✓</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code><a href="#function">Function</a></code> The decorator initializer.
+
+</details>
+<details>
+<summary>
+    <code>(eventName: string, target: <a href="#eventtarget">EventTarget</a>, options?: <a href="#addeventlisteneroptions">AddEventListenerOptions</a>): <a href="#function">Function</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>eventName</td>
+            <td><code>string</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>target</td>
+            <td><code><a href="#eventtarget">EventTarget</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>options</td>
+            <td><code><a href="#addeventlisteneroptions">AddEventListenerOptions</a></code></td>
+            <td align="center">✓</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code><a href="#function">Function</a></code> The decorator initializer.
+
+</details>
+
+<hr />
+
+<strong id="observe"><code>Function</code> observe</strong>
+
+<details>
+<summary>
+    <code>(propertyKey: string): <a href="#function">Function</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>propertyKey</td>
+            <td><code>string</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code><a href="#function">Function</a></code> The decorator initializer.
+
+</details>
+
+<hr />
+
+<strong id="parsedom"><code>Function</code> parseDOM</strong>
+
+<details>
+<summary>
+    <code>(string: string): <a href="#template">Template</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>string</td>
+            <td><code>string</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code><a href="#template">Template</a></code> The virtual DOM template function.
+
+</details>
+
+<hr />
+
+<strong id="property"><code>Function</code> property</strong>
+
+<details>
+<summary>
+    <code>&lt;TypeConstructorHint extends <a href="#constructor">Constructor</a>&gt;(declaration: <a href="#propertydeclaration">PropertyDeclaration</a>): &lt;T extends <a href="#component">Component</a> & <a href="#htmlelement">HTMLElement</a>, P extends string | number | symbol&gt;(targetOrClassElement: <a href="#t">T</a>, propertyKey?: <a href="#p">P</a>, descriptor?: <a href="#propertydeclaration">PropertyDeclaration</a>) => any</code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>declaration</td>
+            <td><code><a href="#propertydeclaration">PropertyDeclaration</a></code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code>&lt;T extends <a href="#component">Component</a> & <a href="#htmlelement">HTMLElement</a>, P extends string | number | symbol&gt;(targetOrClassElement: <a href="#t">T</a>, propertyKey?: <a href="#p">P</a>, descriptor?: <a href="#propertydeclaration">PropertyDeclaration</a>) => any</code> The decorator initializer.
+
+</details>
+
+<hr />
+
+<strong id="render"><code>Function</code> render</strong>
+
+<details>
+<summary>
+    <code>(input: <a href="#template">Template</a>, root: <a href="#node">Node</a>, slot: boolean): void | <a href="#node">Node</a> | <a href="#node">Node</a>[]</code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>input</td>
+            <td><code><a href="#template">Template</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>root</td>
+            <td><code><a href="#node">Node</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>slot</td>
+            <td><code>boolean</code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code>void | <a href="#node">Node</a> | <a href="#node">Node</a>[]</code> The resulting child Nodes.
+
+</details>
+
+<hr />
+
+<strong id="state"><code>Function</code> state</strong>
+
+<details>
+<summary>
+    <code>&lt;TypeConstructorHint extends <a href="#constructor">Constructor</a>&gt;(declaration: <a href="#propertydeclaration">PropertyDeclaration</a>): &lt;T extends <a href="#component">Component</a> & <a href="#htmlelement">HTMLElement</a>, P extends string | number | symbol&gt;(targetOrClassElement: <a href="#t">T</a>, propertyKey?: <a href="#p">P</a>, descriptor?: <a href="#propertydeclaration">PropertyDeclaration</a>) => any</code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>declaration</td>
+            <td><code><a href="#propertydeclaration">PropertyDeclaration</a></code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code>&lt;T extends <a href="#component">Component</a> & <a href="#htmlelement">HTMLElement</a>, P extends string | number | symbol&gt;(targetOrClassElement: <a href="#t">T</a>, propertyKey?: <a href="#p">P</a>, descriptor?: <a href="#propertydeclaration">PropertyDeclaration</a>) => any</code> The decorator initializer.
+
+</details>
+
+<hr />
+
+<strong id="undelegateeventlistener"><code>Function</code> undelegateEventListener</strong>
+
+<details>
+<summary>
+    <code>(element: <a href="#element">Element</a>, eventName: string, selector: null | string, callback: <a href="#delegatedeventcallback">DelegatedEventCallback</a>): void</code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>element</td>
+            <td><code><a href="#element">Element</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>eventName</td>
+            <td><code>string</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>selector</td>
+            <td><code>null | string</code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>callback</td>
+            <td><code><a href="#delegatedeventcallback">DelegatedEventCallback</a></code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code>void</code> 
+
+</details>
+
+<hr />
+
+<strong id="until"><code>Function</code> until</strong>
+
+<details>
+<summary>
+    <code>(thenable: <a href="#promise">Promise</a>, template: <a href="#template">Template</a>): <a href="#promise">Promise</a></code>
+</summary>
+
+<strong>Params</strong>
+<table>
+    <thead>
+        <th align="left">Name</th>
+        <th align="left">Type</th>
+        <th align="center">Optional</th>
+        <th align="left">Description</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>thenable</td>
+            <td><code><a href="#promise">Promise</a></code></td>
+            <td align="center"></td>
+            <td></td></tr>
+<tr>
+            <td>template</td>
+            <td><code><a href="#template">Template</a></code></td>
+            <td align="center"></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<strong>Returns</strong>: <code><a href="#promise">Promise</a></code> A promise which resolves the template while the Thenable is in pending status.
+
+</details>

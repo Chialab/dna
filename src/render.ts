@@ -1,18 +1,503 @@
-import type { Context, PropertiesMap } from './Context';
-import type { Template, TemplateItem, TemplateItems, TemplateFilter, TemplateFunction } from './Template';
+import type { TagNameMap, IterableNodeList, Writable, WritableOf } from './types';
+import type { CustomElement, CustomElementConstructor } from './CustomElementRegistry';
 import type { Observable } from './Observable';
-import type { IterableNodeList } from './NodeList';
-import type { HyperClasses, HyperStyles } from './HyperNode';
-import { isElement, isText, isComment, isArray, indexOf } from './helpers';
-import { isComponent } from './Interfaces';
-import { customElements } from './CustomElementRegistry';
-import { isHyperNode, h } from './HyperNode';
+import type { ComponentInstance } from './Component';
+import htm from 'htm';
+import { createSymbol, isNode, isElement, isArray, isText, indexOf, cloneChildNodes, getPropertyDescriptor } from './helpers';
+import { isComponent } from './Component';
+import { customElements, isCustomElementConstructor } from './CustomElementRegistry';
 import { DOM } from './DOM';
-import { getContext, emptyFragments } from './Context';
 import { isThenable, getThenableState } from './Thenable';
 import { isObservable, getObservableState } from './Observable';
-import { cloneChildNodes } from './NodeList';
 import { css } from './css';
+import { getProperty } from './property';
+
+const innerHtml = htm.bind(h);
+
+/**
+ * Compile a string into virtual DOM template.
+ *
+ * @return The virtual DOM template.
+ */
+export const compile = (string: string): Template => {
+    const array = [string] as string[] & { raw?: string[] };
+    array.raw = [string];
+    return innerHtml(array as unknown as TemplateStringsArray);
+};
+
+/**
+ * Compile a template string into virtual DOM template.
+ *
+ * @return The virtual DOM template.
+ */
+function html(string: TemplateStringsArray, ...values: unknown[]): Template;
+/**
+ * @deprecated use compile function instead.
+ */
+function html(string: string): Template;
+function html(string: string | TemplateStringsArray, ...values: unknown[]): Template {
+    if (typeof string === 'string') {
+        return compile(string);
+    }
+    return innerHtml(string, ...values);
+}
+
+export { html };
+
+/**
+ * A generic template. Can be a single atomic item or a list of items.
+ */
+export type Template =
+    Element |
+    Text |
+    Node |
+    HyperFragment |
+    HyperFunction |
+    HyperComponent<CustomElementConstructor<HTMLElement>> |
+    HyperNode<Node> |
+    HyperSlot |
+    HyperTag<keyof TagNameMap> |
+    Promise<unknown> |
+    Observable<unknown> |
+    string |
+    number |
+    boolean |
+    undefined |
+    null |
+    Template[];
+
+/**
+* A filter function signature for template items.
+*
+* @param item The template item to check.
+* @return A truthy value for valid items, a falsy for value for invalid ones.
+*/
+export type Filter = (item: Node) => boolean;
+
+/**
+ * A re-render function.
+ */
+export type UpdateRequest = () => boolean;
+
+/**
+ * A function that returns a template.
+ *
+ * @param props A set of properties with children.
+ * @param context The current render context.
+ * @return A template.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type FunctionComponent<P = any> = (
+    props: P,
+    context: Context<Node, P>,
+    /**
+     * @deprecated Use context.requestUpdate method.
+     */
+    requestUpdate: UpdateRequest,
+    /**
+     * @deprecated Use the returned value of the context.requestUpdate method.
+     */
+    isAttached: () => boolean,
+    /**
+     * @deprecated Use context.
+     */
+    sameContext: Context<Node, P>
+) => Template;
+
+/**
+ * Identify hyper objects.
+ */
+export const HYPER_OBJECT_SYM: unique symbol = createSymbol();
+
+/**
+ * A constructor alias used for JSX fragments </>.
+ */
+export const Fragment: unique symbol = createSymbol();
+
+/**
+ * Classes dictionary.
+ */
+export type HyperClasses = string | { [key: string]: boolean };
+
+/**
+ * Styles dictionary.
+ */
+export type HyperStyle = string | { [key: string]: string };
+
+/**
+ * Properties used by the render engine.
+ * They can be assigned to a node but they are not part of the node prototype.
+ */
+export type HyperProperties = {
+    is?: string;
+    slot?: string;
+    key?: unknown;
+    xmlns?: string;
+    children?: Template[];
+    class?: HyperClasses;
+    style?: HyperStyle;
+};
+
+/**
+ * The interface of a JSX fragment node.
+ */
+export type HyperFragment = {
+    Function?: undefined;
+    Component?: undefined;
+    node?: undefined;
+    tag?: undefined;
+    isFragment: true;
+    isSlot?: false;
+    key?: unknown;
+    properties?: {};
+    children: Template[];
+    [HYPER_OBJECT_SYM]: true;
+};
+
+/**
+ * The interface of a functional component.
+ */
+export type HyperFunction = {
+    Function: FunctionComponent;
+    Component?: undefined;
+    node?: undefined;
+    tag?: undefined;
+    isFragment?: false;
+    isSlot?: false;
+    key?: unknown;
+    namespaceURI?: string;
+    properties: HyperProperties;
+    children: Template[];
+    [HYPER_OBJECT_SYM]: true;
+};
+
+/**
+ * The interface of an HTML node used as JSX tag.
+ */
+export type HyperNode<T extends Node> = {
+    Function?: undefined;
+    Component?: undefined;
+    node: T;
+    tag?: undefined;
+    isFragment?: false;
+    isSlot?: false;
+    key?: unknown;
+    namespaceURI?: string;
+    properties: Writable<T> & HyperProperties;
+    children: Template[];
+    [HYPER_OBJECT_SYM]: true;
+};
+
+/**
+ * The interface of a Component constructor used as JSX tag.
+ */
+export type HyperComponent<T extends CustomElementConstructor<HTMLElement>> = {
+    Function?: undefined;
+    Component: T;
+    node?: undefined;
+    tag?: undefined;
+    isFragment?: false;
+    isSlot?: false;
+    key?: unknown;
+    namespaceURI?: string;
+    properties: Writable<InstanceType<T>> & HyperProperties;
+    children: Template[];
+    [HYPER_OBJECT_SYM]: true;
+};
+
+/**
+ * The interface of slot element.
+ */
+export type HyperSlot = {
+    Function?: undefined;
+    Component?: undefined;
+    node?: undefined;
+    tag: 'slot';
+    isFragment?: false;
+    isSlot: true;
+    key?: unknown;
+    properties: Writable<HTMLElementTagNameMap['slot']> & HyperProperties;
+    children: Template[];
+    [HYPER_OBJECT_SYM]: true;
+};
+
+/**
+ * The interface of a generic JSX tag.
+ */
+export type HyperTag<T extends keyof TagNameMap> = {
+    Function?: undefined;
+    Component?: undefined;
+    node?: undefined;
+    tag: T;
+    isFragment?: false;
+    isSlot?: false;
+    key?: unknown;
+    namespaceURI?: string;
+    properties: Writable<TagNameMap[T]> & HyperProperties;
+    children: Template[];
+    [HYPER_OBJECT_SYM]: true;
+};
+
+/**
+ * Generic hyper object.
+ */
+export type HyperObject = HyperFragment | HyperFunction | HyperComponent<CustomElementConstructor<HTMLElement>> | HyperNode<Node> | HyperSlot | HyperTag<keyof TagNameMap>;
+
+/**
+ * Check if the current virtual node is a fragment.
+ * @param target The node to check.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isHyperObject = (target: any): target is HyperObject => typeof target === 'object' && !!target[HYPER_OBJECT_SYM];
+
+/**
+ * Check if the current virtual node is a fragment.
+ * @param target The node to check.
+ */
+export const isHyperFragment = (target: HyperObject): target is HyperFragment => !!target.isFragment;
+
+/**
+ * Check if the current virtual node is a functional component.
+ * @param target The node to check.
+ */
+export const isHyperFunction = (target: HyperObject): target is HyperFunction => !!target.Function;
+
+/**
+ * Check if the current virtual node is a Component.
+ * @param target The node to check.
+ */
+export const isHyperComponent = (target: HyperObject): target is HyperComponent<CustomElementConstructor<HTMLElement>> => !!target.Component;
+
+/**
+ * Check if the current virtual node is an HTML node instance.
+ * @param target The node to check.
+ */
+export const isHyperNode = (target: HyperObject): target is HyperNode<Node> => !!target.node;
+
+/**
+ * Check if the current virtual node is a slot element.
+ * @param target The node to check.
+ */
+export const isHyperSlot = (target: HyperObject): target is HyperSlot => !!target.isSlot;
+
+/**
+ * Check if the current virtual node is a generic tag to render.
+ * @param target The node to check.
+ */
+export const isHyperTag = (target: HyperObject): target is HyperTag<'div'> => !!target.tag;
+
+
+/**
+ * HyperFunction factory to use as JSX pragma.
+ *
+ * @param tagOrComponent The tag name, the constructor or the instance of the node.
+ * @param properties The set of properties of the Node.
+ * @param children The children of the Node.
+ */
+function h(tagOrComponent: typeof Fragment, properties: null, ...children: Template[]): HyperFragment;
+function h<T extends FunctionComponent>(tagOrComponent: T, properties: HyperProperties | null, ...children: Template[]): HyperFunction;
+function h<T extends CustomElementConstructor<HTMLElement>>(tagOrComponent: T, properties: Writable<InstanceType<T>> & HyperProperties | null, ...children: Template[]): HyperComponent<T>;
+function h<T extends Node>(tagOrComponent: T, properties: Writable<T> & HyperProperties | null, ...children: Template[]): HyperNode<T>;
+function h(tagOrComponent: 'slot', properties: Writable<HTMLSlotElement> & HyperProperties | null, ...children: Template[]): HyperSlot;
+function h<T extends keyof TagNameMap>(tagOrComponent: T, properties: Writable<TagNameMap[T]> & HyperProperties | null, ...children: Template[]): HyperTag<T>;
+function h(tagOrComponent: typeof Fragment | FunctionComponent | CustomElementConstructor<HTMLElement> | Node | keyof TagNameMap, properties: HyperProperties | null = null, ...children: Template[]) {
+    const { is, key, xmlns } = (properties || {});
+
+    if (tagOrComponent === Fragment) {
+        return {
+            isFragment: true,
+            children,
+            [HYPER_OBJECT_SYM]: true,
+        } as HyperFragment;
+    }
+
+    if (isNode(tagOrComponent)) {
+        return {
+            node: tagOrComponent,
+            key,
+            namespaceURI: xmlns,
+            properties: properties || {},
+            children,
+            [HYPER_OBJECT_SYM]: true,
+        } as HyperNode<typeof tagOrComponent>;
+    }
+
+    if (typeof tagOrComponent === 'string') {
+        if (tagOrComponent === 'svg') {
+            return {
+                tag: tagOrComponent,
+                key,
+                namespaceURI: 'http://www.w3.org/2000/svg',
+                properties,
+                children,
+                [HYPER_OBJECT_SYM]: true,
+            };
+        }
+
+        if (tagOrComponent === 'slot') {
+            return {
+                tag: tagOrComponent,
+                isSlot: true,
+                key,
+                properties: properties || {},
+                children,
+                [HYPER_OBJECT_SYM]: true,
+            } as HyperSlot;
+        }
+
+        const Component = customElements.get(is || tagOrComponent);
+        if (Component) {
+            return {
+                Component,
+                key,
+                namespaceURI: xmlns,
+                properties: properties || {},
+                children,
+                [HYPER_OBJECT_SYM]: true,
+            } as HyperComponent<typeof Component>;
+        }
+
+        return {
+            tag: tagOrComponent as keyof TagNameMap,
+            key,
+            namespaceURI: xmlns,
+            properties: properties || {},
+            children,
+            [HYPER_OBJECT_SYM]: true,
+        } as HyperTag<typeof tagOrComponent>;
+    }
+
+    if (isCustomElementConstructor(tagOrComponent)) {
+        return {
+            Component: tagOrComponent,
+            key,
+            namespaceURI: xmlns,
+            properties: properties || {},
+            children,
+            [HYPER_OBJECT_SYM]: true,
+        } as HyperComponent<typeof tagOrComponent>;
+    }
+
+    return {
+        Function: tagOrComponent,
+        key,
+        namespaceURI: xmlns,
+        properties: properties || {},
+        children,
+        [HYPER_OBJECT_SYM]: true,
+    } as HyperFunction;
+}
+
+export { h };
+
+/**
+ * A symbol for node context.
+ */
+const CONTEXT_SYMBOL: unique symbol = createSymbol();
+
+export type WithContext<T extends Node> = T & {
+    [CONTEXT_SYMBOL]?: Context<T>;
+};
+
+/**
+ * The node context interface.
+ */
+export type Context<
+    T extends Node = Node,
+    P = Writable<T>,
+    S = Map<string, unknown>
+> = {
+    node: T;
+    isElement?: boolean;
+    isText?: boolean;
+    tagName?: string;
+    is?: string;
+    key?: unknown;
+    properties: [
+        WeakMap<Context<T, P>, P & HyperProperties>,
+        WeakMap<Context<T, P>, P & HyperProperties>,
+    ];
+    store: S;
+    childNodes?: IterableNodeList;
+    slotChildNodes?: IterableNodeList;
+    Function?: FunctionComponent<P>;
+    start?: Node;
+    end?: Node;
+    fragments: Context[];
+    parent?: Context;
+    root?: Context;
+    requestUpdate?: UpdateRequest;
+    __proto__: {
+        readonly size: number;
+        has: Map<string, unknown>['has'];
+        get: Map<string, unknown>['get'];
+        set: Map<string, unknown>['set'];
+        delete: Map<string, unknown>['delete'];
+        clear: Map<string, unknown>['clear'];
+        forEach: Map<string, unknown>['forEach'];
+    };
+};
+
+/**
+ * Attach a context to an object.
+ * @param target The object to context.
+ * @param context The context to set.
+ */
+export const setContext = <T extends Node>(target: WithContext<T>, context: Context<T>): Context<T> => target[CONTEXT_SYMBOL] = context;
+
+/**
+ * Create a node context.
+ * @param node The node scope of the context.
+ * @return A context object for the node.
+ */
+export const createContext = <T extends Node>(node: T) => {
+    const isElementNode = isElement(node);
+    const isTextNode = !isElementNode && isText(node);
+    const is = (node as unknown as CustomElement<HTMLElement>).is;
+    const store = new Map() as Map<string, unknown>;
+    return setContext(node, {
+        node,
+        isElement: isElementNode,
+        isText: isTextNode,
+        tagName: isElementNode ? (node as unknown as HTMLElement).tagName.toLowerCase() : undefined,
+        childNodes: isElementNode ? node.childNodes as unknown as IterableNodeList : undefined,
+        is,
+        properties: [new WeakMap(), new WeakMap()],
+        store,
+        fragments: [],
+        __proto__: {
+            get size() {
+                return store.size;
+            },
+            has: store.has.bind(store),
+            get: store.get.bind(store),
+            set: store.set.bind(store),
+            delete: store.delete.bind(store),
+            clear: store.clear.bind(store),
+            forEach: store.forEach.bind(store),
+        },
+    }) as Context<T>;
+};
+
+/**
+ * Get the context attached to an object.
+ * @param target The scope of the context.
+ * @return The context object (if it exists).
+ */
+export const getOrCreateContext = <T extends Node>(target: WithContext<T>) => (target[CONTEXT_SYMBOL] || createContext(target)) as Context<T>;
+
+/**
+ * Cleanup child fragments of a context.
+ * @param context The fragment to empty.
+ */
+export const emptyFragments = <T extends Node>(context: Context<T>) => {
+    const fragments = context.fragments;
+    let len = fragments.length;
+    while (len--) {
+        emptyFragments(fragments.pop() as Context);
+    }
+    return fragments;
+};
 
 /**
  * A cache for converted class values.
@@ -20,60 +505,95 @@ import { css } from './css';
 const CLASSES_CACHE: { [key: string]: string[] } = {};
 
 /**
- * A cache for converted style values.
- */
-const STYLES_CACHE: { [key: string]: { [key: string]: string } } = {};
-
-/**
  * Convert strings or classes map to a list of classes.
  * @param value The value to convert.
  * @return A list of classes.
  */
-const convertClasses = (value: HyperClasses) => {
-    let classes: string[] = [];
+const convertClasses = (value: HyperClasses | null | undefined) => {
+    const classes: string[] = [];
     if (!value) {
         return classes;
     }
     if (typeof value === 'object') {
-        for (let k in value) {
+        for (const k in value) {
             if (value[k]) {
                 classes.push(k);
             }
         }
         return classes;
     }
-    return classes = CLASSES_CACHE[value] = CLASSES_CACHE[value] || value.toString().trim().split(' ');
+    return CLASSES_CACHE[value] = CLASSES_CACHE[value] || value.toString().trim().split(' ');
 };
+
+/**
+ * A cache for converted style values.
+ */
+const STYLES_CACHE: { [key: string]: { [key: string]: string } } = {};
 
 /**
  * Convert strings or styles map to a list of styles.
  * @param value The value to convert.
  * @return A set of styles.
  */
-const convertStyles = (value: HyperStyles) => {
-    let styles: { [key: string]: string } = {};
+const convertStyles = (value: HyperStyle| null | undefined) => {
+    const styles: { [key: string]: string } = {};
     if (!value) {
         return styles;
     }
     if (typeof value === 'object') {
-        for (let propertyKey in value) {
-            let camelName = propertyKey.replace(/[A-Z]/g, (match: string) =>
+        for (const propertyKey in value) {
+            const camelName = propertyKey.replace(/[A-Z]/g, (match: string) =>
                 `-${match.toLowerCase()}`
             );
             styles[camelName] = value[propertyKey];
         }
         return styles;
     }
-    return styles = STYLES_CACHE[value] = STYLES_CACHE[value] || value
+    return STYLES_CACHE[value] = STYLES_CACHE[value] || value
         .toString()
         .split(';')
         .reduce((ruleMap: { [key: string]: string }, ruleString: string) => {
-            let rulePair = ruleString.split(':');
+            const rulePair = ruleString.split(':');
             if (rulePair.length > 1) {
                 ruleMap[(rulePair.shift() as string).trim()] = rulePair.join(':').trim();
             }
             return ruleMap;
         }, styles);
+};
+
+/**
+ * Check if the render engine is handling input values.
+ * @param element The current node element.
+ * @param propertyKey The changed property key.
+ */
+const isRenderingInput = (element: HTMLElement, propertyKey: string): element is HTMLInputElement =>
+    (propertyKey === 'checked' || propertyKey === 'value') &&
+    element.tagName === 'INPUT';
+
+/**
+ * Add missing keys to properties object.
+ * @param previous The previous object.
+ * @param actual The actual one.
+ */
+const fillEmptyValues = <T extends {}>(previous: T, actual: { [key: string]: unknown }) => {
+    for (const key in previous) {
+        if (!(key in actual)) {
+            actual[key] = undefined;
+        }
+    }
+
+    return actual as unknown as T;
+};
+
+/**
+ * Set a value to an HTML element.
+ * @param element The node to update.
+ * @param propertyKey The key to update.
+ * @param value The value to set.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const setValue = <T extends HTMLElement>(element: T, propertyKey: WritableOf<T>, value: any) => {
+    element[propertyKey] = value;
 };
 
 /**
@@ -100,7 +620,9 @@ export const internalRender = (
     mainContext?: Context,
     fragment?: Context
 ) => {
-    let renderContext = context || getContext(root);
+    let renderContext = context || getOrCreateContext(root);
+    const refContext = mainContext || renderContext;
+
     let childNodes: IterableNodeList;
     if (slot && renderContext.slotChildNodes) {
         childNodes = renderContext.slotChildNodes as IterableNodeList;
@@ -118,73 +640,73 @@ export const internalRender = (
     let currentFragment = fragment;
     let lastNode: Node|undefined;
     if (fragment) {
-        currentIndex = indexOf.call(childNodes, fragment.first as Node);
-        lastNode = fragment.last as Node;
+        currentIndex = indexOf.call(childNodes, fragment.start as Node);
+        lastNode = fragment.end as Node;
     } else {
         emptyFragments(renderContext);
         currentIndex = 0;
     }
     let currentNode = childNodes.item(currentIndex) as Node;
-    let currentContext = currentNode ? getContext(currentNode) : null;
-    let refContext = mainContext || renderContext;
+    let currentContext = currentNode ? getOrCreateContext(currentNode) : null;
 
-    const handleItems = (template: Template, filter?: TemplateFilter) => {
+    const handleItems = (template: Template, filter?: Filter) => {
         if (template == null || template === false) {
             return;
         }
 
-        let templateType = typeof template;
-        let isObjectTemplate = templateType === 'object';
-        let templateNode: Node | undefined;
-        let templateContext: Context | undefined;
-        let templateChildren: TemplateItems | undefined;
-        let templateNamespace = namespace;
-        let isElementTemplate = false;
-        let isComponentTemplate = false;
-
-        if (isObjectTemplate && isArray(template)) {
+        if (isArray(template)) {
             // call the render function for each child
             for (let i = 0, len = template.length; i < len; i++) {
                 handleItems(template[i], filter);
             }
             return;
-        } else if (isObjectTemplate && isHyperNode(template)) {
-            let { node, Component, Function, tag, properties, children, key, isFragment, isSlot, namespaceURI } = template;
+        }
 
-            if (Function) {
-                let rootFragment = fragment;
-                let previousContext = renderContext;
-                let previousFragment = currentFragment;
-                let fragments = renderContext.fragments;
-                let state: Map<string, unknown>;
+        let templateNode;
+        let templateContext: Context | undefined;
+        let templateChildren: Template[] | undefined;
+        let templateNamespace = namespace;
+
+        if (isHyperObject(template)) {
+            if (isHyperFragment(template)) {
+                handleItems(template.children, filter);
+                return;
+            }
+
+            if (isHyperFunction(template)) {
+                const { Function, key, properties, children } = template;
+                const rootFragment = fragment;
+                const previousContext = renderContext;
+                const previousFragment = currentFragment;
+                const fragments = renderContext.fragments;
                 let placeholder: Node;
                 if (fragment) {
-                    state = fragment.state;
-                    placeholder = fragment.first as Node;
-                } else if (currentContext && currentContext.function === Function) {
-                    state = currentContext.state;
-                    placeholder = currentContext.first as Node;
+                    placeholder = fragment.start as Node;
+                } else if (currentContext && currentContext.Function === Function && currentContext.key === key) {
+                    placeholder = currentContext.start as Node;
                 } else {
-                    state = new Map();
                     placeholder = DOM.createComment(Function.name);
                 }
 
-                let renderFragmentContext = getContext(placeholder);
-                emptyFragments(renderFragmentContext);
-                renderFragmentContext.state = state;
-                renderFragmentContext.function = Function;
-                renderFragmentContext.first = placeholder;
-                renderFragmentContext.isAlive = function() {
-                    return fragments.indexOf(this) !== -1;
-                };
-                renderFragmentContext.requestUpdate = function() {
-                    if (!((this.isAlive as Function))()) {
+                const renderFragmentContext = getOrCreateContext(placeholder);
+                const isAttached = () => fragments.indexOf(renderFragmentContext) !== -1;
+                let running = true;
+                const requestUpdate: UpdateRequest = renderFragmentContext.requestUpdate = () => {
+                    if (renderFragmentContext.requestUpdate !== requestUpdate) {
+                        return (renderFragmentContext.requestUpdate as UpdateRequest)();
+                    }
+                    if (running) {
+                        throw new Error('An update request is already running');
+                    }
+                    if (!isAttached()) {
                         return false;
                     }
                     internalRender(root, template, slot, previousContext, namespace, rootContext, refContext, renderFragmentContext);
                     return true;
                 };
-
+                emptyFragments(renderFragmentContext);
+                renderFragmentContext.Function = Function;
+                renderFragmentContext.start = placeholder;
                 renderContext = renderFragmentContext;
                 currentFragment = renderFragmentContext;
                 fragment = undefined;
@@ -197,17 +719,17 @@ export const internalRender = (
                                 children,
                                 ...properties,
                             },
-                            state,
-                            () => (renderFragmentContext.requestUpdate as Function)(),
-                            () => (renderFragmentContext.isAlive as Function)(),
-                            renderContext
-                        ) as TemplateItem,
+                            renderFragmentContext,
+                            requestUpdate,
+                            isAttached,
+                            renderFragmentContext
+                        ),
                     ],
                     filter
                 );
 
                 fragment = rootFragment;
-                renderFragmentContext.last = childNodes.item(currentIndex - 1) as Node;
+                renderFragmentContext.end = childNodes.item(currentIndex - 1) as Node;
                 renderContext = previousContext;
                 currentFragment = previousFragment;
 
@@ -217,62 +739,62 @@ export const internalRender = (
                     fragments.splice(fragments.indexOf(fragment), 1, renderFragmentContext);
                     fragment = renderFragmentContext;
                 }
-                return;
-            }
 
-            if (isFragment) {
-                handleItems(children, filter);
+                running = false;
                 return;
             }
 
             // if the current patch is a slot,
-            if (isSlot && rootContext) {
-                let slotChildNodes = rootContext.slotChildNodes;
-                if (slotChildNodes) {
-                    for (let i = 0, len = slotChildNodes.length; i < len; i++) {
-                        let node = slotChildNodes.item(i);
-                        let context = getContext(node);
-                        if (!context.root) {
-                            context.root = rootContext;
-                        }
-                    }
-                }
-
-                let name = properties.name;
-                let filter = (item: Node) => {
-                    if (getContext(item).root === rootContext) {
-                        if (isElement(item)) {
-                            if (!name) {
-                                return !item.getAttribute('slot');
+            if (isHyperSlot(template)) {
+                if (rootContext) {
+                    const { properties, children } = template;
+                    const slotChildNodes = rootContext.slotChildNodes;
+                    if (slotChildNodes) {
+                        for (let i = 0, len = slotChildNodes.length; i < len; i++) {
+                            const node = slotChildNodes.item(i) as Node;
+                            const context = getOrCreateContext(node);
+                            if (!context.root) {
+                                context.root = rootContext;
                             }
-
-                            return item.getAttribute('slot') === name;
                         }
                     }
 
-                    return !name;
-                };
+                    const name = properties.name;
+                    const filter = (item: Node) => {
+                        if (getOrCreateContext(item).root === rootContext) {
+                            if (isElement(item)) {
+                                if (!name) {
+                                    return !item.getAttribute('slot');
+                                }
 
-                handleItems(slotChildNodes || [], filter);
-                if (!childNodes.length) {
-                    handleItems(children);
+                                return item.getAttribute('slot') === name;
+                            }
+                        }
+
+                        return !name;
+                    };
+
+                    handleItems(slotChildNodes || [], filter);
+                    if (!childNodes.length) {
+                        handleItems(children);
+                    }
                 }
                 return;
             }
 
-            if (node) {
-                templateNode = node;
-                isElementTemplate = isElement(node);
-                isComponentTemplate = isElementTemplate && isComponent(node);
+            const { key, children, namespaceURI } = template;
+            if (isHyperNode(template)) {
+                templateNode = template.node;
             } else {
                 templateNamespace = namespaceURI || namespace;
 
                 checkKey: if (currentContext) {
                     let currentKey = currentContext.key;
                     if (currentKey != null && key != null && key !== currentKey) {
+                        emptyFragments(currentContext);
                         DOM.removeChild(root, currentNode, slot);
                         currentNode = childNodes.item(currentIndex) as Node;
-                        currentContext = currentNode ? getContext(currentNode) : null;
+                        currentContext = currentNode ? getOrCreateContext(currentNode) : null;
                         if (!currentContext) {
                             break checkKey;
                         }
@@ -280,8 +802,8 @@ export const internalRender = (
                     }
 
                     if (currentFragment && currentNode) {
-                        let io = indexOf.call(childNodes, currentNode);
-                        let lastIo = indexOf.call(childNodes, currentFragment.last);
+                        const io = indexOf.call(childNodes, currentNode);
+                        const lastIo = indexOf.call(childNodes, currentFragment.end);
                         if (io !== -1 && io > lastIo) {
                             break checkKey;
                         }
@@ -289,173 +811,162 @@ export const internalRender = (
 
                     if (key != null || currentKey != null) {
                         if (key === currentKey) {
-                            isElementTemplate = true;
-                            templateNode = currentNode as Element;
+                            templateNode = currentNode;
                             templateContext = currentContext;
-                            isComponentTemplate = !!Component && isComponent(templateNode);
                         }
-                    } else if (Component && currentNode instanceof Component) {
-                        isElementTemplate = true;
-                        isComponentTemplate = isComponent(currentNode);
+                    } else if (isHyperComponent(template) && currentNode instanceof template.Component) {
                         templateNode = currentNode;
                         templateContext = currentContext;
-                    } else if (tag && currentContext.tagName === tag) {
-                        isElementTemplate = true;
-                        templateNode = currentNode as Element;
+                    } else if (isHyperTag(template) && currentContext.tagName === template.tag) {
+                        templateNode = currentNode;
                         templateContext = currentContext;
                     }
                 }
 
                 if (!templateNode) {
-                    isElementTemplate = true;
-
-                    if (Component) {
-                        templateNode = new Component();
-                        isComponentTemplate = isComponent(templateNode);
+                    if (isHyperComponent(template)) {
+                        templateNode = new template.Component();
                     } else {
-                        templateNode = DOM.createElementNS(templateNamespace, tag as keyof HTMLElementTagNameMap);
+                        templateNode = DOM.createElementNS(templateNamespace, template.tag);
                     }
                 }
             }
 
             // update the Node properties
-            templateContext = templateContext || getContext(templateNode);
+            const templateElement = templateNode as HTMLElement;
 
-            let map = templateContext.props[slot ? 1 : 0] as PropertiesMap;
-            let childProperties = map.get(refContext);
+            templateContext = templateContext || getOrCreateContext(templateNode);
+            const map = templateContext.properties[slot ? 1 : 0];
+            const oldProperties = (map.get(refContext) || {}) as Writable<HTMLElement> & HyperProperties;
+            const properties = fillEmptyValues(oldProperties, template.properties);
             map.set(refContext, properties);
             if (key != null) {
                 templateContext.key = key;
             }
 
-            if (childProperties) {
-                for (let propertyKey in childProperties) {
-                    if (!(propertyKey in properties)) {
-                        properties[propertyKey] = null;
-                    }
-                }
-            }
-
-            for (let propertyKey in properties) {
-                if (propertyKey === 'is' || propertyKey === 'key' || propertyKey === 'children') {
+            let propertyKey: keyof typeof properties;
+            for (propertyKey in properties) {
+                if (propertyKey === 'is' || propertyKey === 'key' || propertyKey === 'children' || propertyKey === 'xmlns') {
                     continue;
                 }
-                let value = properties[propertyKey];
-                let oldValue;
-                if (childProperties) {
-                    oldValue = childProperties[propertyKey];
-                    if (oldValue === value && propertyKey !== 'checked' && propertyKey !== 'value') {
-                        continue;
+                const value = properties[propertyKey];
+                const oldValue = oldProperties[propertyKey];
+                if (oldValue === value) {
+                    if (isRenderingInput(templateElement, propertyKey)) {
+                        setValue(templateElement, propertyKey as unknown as 'value', value);
                     }
+                    continue;
                 }
 
                 if (propertyKey === 'style') {
-                    let style = (templateNode as HTMLElement).style;
-                    let oldStyles = convertStyles(oldValue as HyperStyles);
-                    let newStyles = convertStyles(value as HyperStyles);
-                    for (let propertyKey in oldStyles) {
+                    const style = templateElement.style;
+                    const oldStyles = convertStyles(oldProperties.style);
+                    const newStyles = convertStyles(properties.style);
+                    for (const propertyKey in oldStyles) {
                         if (!(propertyKey in newStyles)) {
                             style.removeProperty(propertyKey);
                         }
                     }
-                    for (let propertyKey in newStyles) {
+                    for (const propertyKey in newStyles) {
                         style.setProperty(propertyKey, newStyles[propertyKey]);
                     }
                     continue;
                 } else if (propertyKey === 'class') {
-                    let classList = (templateNode as HTMLElement).classList;
-                    let newClasses = convertClasses(value as HyperClasses);
+                    const classList = templateElement.classList;
+                    const newClasses = convertClasses(properties.class);
                     if (oldValue) {
-                        let oldClasses = convertClasses(oldValue as HyperClasses);
+                        const oldClasses = convertClasses(oldProperties.class);
                         for (let i = 0, len = oldClasses.length; i < len; i++) {
-                            let className = oldClasses[i];
+                            const className = oldClasses[i];
                             if (newClasses.indexOf(className) === -1) {
                                 classList.remove(className);
                             }
                         }
                     }
                     for (let i = 0, len = newClasses.length; i < len; i++) {
-                        let className = newClasses[i];
+                        const className = newClasses[i];
                         if (!classList.contains(className)) {
                             classList.add(className);
                         }
                     }
                     continue;
-                } else if (propertyKey[0] === 'o' && propertyKey[1] === 'n' && !(propertyKey in templateNode.constructor.prototype)) {
-                    let eventName = propertyKey.substr(2);
+                } else if (propertyKey[0] === 'o' && propertyKey[1] === 'n' && !(propertyKey in templateElement.constructor.prototype)) {
+                    const eventName = propertyKey.substr(2);
                     if (oldValue) {
-                        templateNode.removeEventListener(eventName, oldValue as EventListener);
+                        templateElement.removeEventListener(eventName, oldValue as EventListener);
                     }
                     if (value) {
-                        templateNode.addEventListener(eventName, value as EventListener);
+                        templateElement.addEventListener(eventName, value as EventListener);
                     }
                     continue;
                 }
 
-                let type = typeof value;
-                let wasType = typeof oldValue;
-                let isReference = (value && type === 'object') || type === 'function';
-                let wasReference = (oldValue && wasType === 'object') || wasType === 'function';
+                const type = typeof value;
+                const wasType = typeof oldValue;
+                const isReference = (value && type === 'object') || type === 'function';
+                const wasReference = (oldValue && wasType === 'object') || wasType === 'function';
 
-                if ((isReference || wasReference) || ((propertyKey === 'checked' || propertyKey === 'value') && (templateNode as HTMLElement).tagName === 'INPUT')) {
-                    (templateNode as any)[propertyKey] = value;
-                } else if (Component) {
+                if (isReference || wasReference || isRenderingInput(templateElement, propertyKey)) {
+                    setValue(templateElement, propertyKey, value);
+                } else if (isHyperComponent(template)) {
+                    const Component = template.Component;
                     if (type === 'string') {
-                        let observedAttributes: string[] = Component.observedAttributes;
+                        const observedAttributes = Component.observedAttributes;
                         if (!observedAttributes || observedAttributes.indexOf(propertyKey) === -1) {
-                            (templateNode as any)[propertyKey] = value;
+                            const descriptor = (propertyKey in templateElement) && getPropertyDescriptor(templateElement, propertyKey);
+                            if (!descriptor || !descriptor.get || descriptor.set) {
+                                setValue(templateElement, propertyKey, value);
+                            }
+                        } else {
+                            const property = getProperty(Component.prototype as ComponentInstance<HTMLElement>, propertyKey);
+                            if (property && property.fromAttribute) {
+                                setValue(templateElement, propertyKey, property.fromAttribute(value as string));
+                            }
                         }
                     } else {
-                        (templateNode as any)[propertyKey] = value;
+                        setValue(templateElement, propertyKey, value);
                     }
                 }
 
                 if (value == null || value === false) {
-                    if ((templateNode as Element).hasAttribute(propertyKey)) {
-                        (templateNode as Element).removeAttribute(propertyKey);
+                    if (templateElement.hasAttribute(propertyKey)) {
+                        templateElement.removeAttribute(propertyKey);
                     }
                 } else if (!isReference) {
-                    let attrValue = value === true ? '' : (value as string).toString();
-                    if ((templateNode as Element).getAttribute(propertyKey) !== attrValue) {
-                        (templateNode as Element).setAttribute(propertyKey, attrValue);
+                    const attrValue = value === true ? '' : (value as string).toString();
+                    if (templateElement.getAttribute(propertyKey) !== attrValue) {
+                        templateElement.setAttribute(propertyKey, attrValue);
                     }
                 }
             }
 
             templateChildren = children;
-        } else if (isObjectTemplate && isElement(template)) {
-            templateNode = template;
-            isElementTemplate = true;
-            isComponentTemplate = isComponent(templateNode);
-        } else if (isObjectTemplate && isText(template)) {
-            templateNode = template;
-        } else if (isObjectTemplate && isComment(template)) {
-            templateNode = template;
-        } else if (isObjectTemplate && isThenable(template)) {
-            handleItems(h((props, data, update) => {
-                let status = getThenableState(template as Promise<unknown>);
+        } else if (isThenable(template)) {
+            handleItems(h((props, context) => {
+                const status = getThenableState(template as Promise<unknown>);
                 if (status.pending) {
                     (template as Promise<unknown>)
                         .catch(() => 1)
                         .then(() => {
-                            update();
+                            (context.requestUpdate as UpdateRequest)();
                         });
                 }
-                return status.result as TemplateItem;
-            }), filter);
+                return status.result as Template;
+            }, null), filter);
             return;
-        } else if (isObjectTemplate && isObservable(template)) {
-            handleItems(h(((props, context, update) => {
-                let status = getObservableState(template);
+        } else if (isObservable(template)) {
+            const observable = template;
+            handleItems(h((props, context) => {
+                const status = getObservableState(observable);
                 if (!status.complete) {
-                    let subscription = (template as Observable<unknown>).subscribe(
+                    const subscription = observable.subscribe(
                         () => {
-                            if (!update()) {
+                            if (!(context.requestUpdate as UpdateRequest)()) {
                                 subscription.unsubscribe();
                             }
                         },
                         () => {
-                            if (!update()) {
+                            if (!(context.requestUpdate as UpdateRequest)()) {
                                 subscription.unsubscribe();
                             }
                         },
@@ -464,17 +975,19 @@ export const internalRender = (
                         }
                     );
                 }
-                return status.current;
-            }) as TemplateFunction), filter);
+                return status.current as Template;
+            }, null), filter);
             return;
-        } else {
-            if (templateType === 'string' && rootContext && renderContext.tagName === 'style') {
-                let is = rootContext.is as string;
+        } else if (isNode(template)) {
+            templateNode = template;
+        } else  {
+            if (typeof template === 'string' && rootContext && renderContext.tagName === 'style') {
+                const is = rootContext.is as string;
                 template = css(is, template as string, customElements.tagNames[is]);
                 (root as HTMLStyleElement).setAttribute('name', is);
             }
 
-            if (currentContext && currentContext.isText && !currentContext.function) {
+            if (currentContext && currentContext.isText) {
                 templateNode = currentNode as Text;
                 if (templateNode.textContent != template) {
                     templateNode.textContent = template as string;
@@ -500,10 +1013,10 @@ export const internalRender = (
             currentIndex++;
         } else {
             currentNode = childNodes.item(++currentIndex) as Node;
-            currentContext = currentNode ? getContext(currentNode) : null;
+            currentContext = currentNode ? getOrCreateContext(currentNode) : null;
         }
 
-        if (isElementTemplate &&
+        if (isElement(templateNode) &&
             templateChildren &&
             templateContext &&
             ((templateContext.parent && templateContext.parent === refContext) || templateChildren.length)) {
@@ -512,7 +1025,7 @@ export const internalRender = (
             internalRender(
                 templateNode as HTMLElement,
                 templateChildren,
-                isComponentTemplate,
+                isComponent(templateNode),
                 templateContext,
                 templateNamespace,
                 rootContext,
@@ -533,9 +1046,9 @@ export const internalRender = (
         lastIndex = childNodes.length;
     }
     while (currentIndex < lastIndex) {
-        let item = childNodes.item(--lastIndex) as Node;
+        const item = childNodes.item(--lastIndex) as Node;
+        const context = getOrCreateContext(item);
         if (slot) {
-            let context = getContext(item);
             if (context.root === rootContext) {
                 delete context.root;
             }
@@ -543,6 +1056,7 @@ export const internalRender = (
                 delete context.parent;
             }
         }
+        emptyFragments(context);
         DOM.removeChild(root, item, slot);
     }
 
@@ -559,7 +1073,7 @@ export const internalRender = (
  * @return The resulting child Nodes.
  */
 export const render = (input: Template, root: Node = DOM.createDocumentFragment(), slot: boolean = isComponent(root)): Node | Node[] | void => {
-    let childNodes = internalRender(root, input, slot);
+    const childNodes = internalRender(root, input, slot);
     if (!childNodes) {
         return;
     }

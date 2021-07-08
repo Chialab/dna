@@ -1,10 +1,13 @@
-import { createSymbolKey } from './symbols';
+import { createSymbol } from './helpers';
 
 /**
  * A Symbol which contains Thenable state.
- * @private
  */
-const symbol: unique symbol = createSymbolKey() as any;
+const THENABLE_SYMBOL: unique symbol = createSymbol();
+
+type WithThenableState<T> = T & {
+    [THENABLE_SYMBOL]?: ThenableState;
+};
 
 /**
  * An object representing the status of a Thenable.
@@ -18,31 +21,32 @@ export type ThenableState = {
  * Check if the target is a Thenable (has the `then` method).
  * @param target The object to check.
  */
-export const isThenable = (target: any): target is Promise<unknown> => typeof target.then === 'function';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isThenable = (target: any): target is Promise<any> => typeof target.then === 'function';
 
 /**
  * Get or inject a state into a Thenable object.
  * @param target The Thenable to extend.
  * @return The Thenable state instance.
  */
-export const getThenableState = (target: Promise<unknown>): ThenableState => {
-    let thenable: Promise<unknown> = target;
-    if ((thenable as any)[symbol]) {
-        return (thenable as any)[symbol];
+export const getThenableState = (target: WithThenableState<Promise<unknown>>): ThenableState => {
+    const state = target[THENABLE_SYMBOL];
+    if (state) {
+        return state;
     }
-    let state: ThenableState = {
+
+    const newState = target[THENABLE_SYMBOL] = {
         pending: true,
-    };
-    (thenable as any)[symbol] = state;
-    thenable
+    } as ThenableState;
+    target
         .then((result: unknown) => {
-            state.result = result;
-            state.pending = false;
+            newState.result = result;
+            newState.pending = false;
         })
         .catch((error: unknown) => {
-            state.result = error;
-            state.pending = false;
+            newState.result = error;
+            newState.pending = false;
         });
 
-    return state;
+    return newState;
 };

@@ -1,10 +1,8 @@
 node_modules
 npm-debug.log
-yarn-error.log
 .eslintcache
-.stylelintcache
-/test/__coverage__
-/test/__generated__
+.env
 coverage
 types
 dist
+tsconfig.tsbuildinfo

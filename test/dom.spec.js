@@ -1,5 +1,6 @@
-import { getComponentName } from './helpers.js';
+import { getComponentName } from './helpers.spec.js';
 import * as DNA from '@chialab/dna';
+import { expect } from '@esm-bundle/chai/esm/chai.js';
 
 describe('DOM', function() {
     this.timeout(10 * 1000);
@@ -159,6 +160,30 @@ describe('DOM', function() {
             DNA.DOM.replaceChild(wrapper, child, child);
             expect(child.parentNode).to.be.equal(wrapper);
             expect(wrapper.childNodes).to.have.lengthOf(1);
+        });
+    });
+
+    describe('#insertAdjacentElement', () => {
+        it('should insert a child at first position', () => {
+            const child1 = DNA.DOM.createElement('div');
+            const child2 = DNA.DOM.createElement('div');
+            DNA.DOM.appendChild(wrapper, child1);
+            DNA.DOM.insertAdjacentElement(wrapper, 'afterbegin', child2);
+            expect(child1.parentNode).to.be.equal(wrapper);
+            expect(child2.parentNode).to.be.equal(wrapper);
+            expect(wrapper.childNodes[0]).to.be.equal(child2);
+            expect(wrapper.childNodes[1]).to.be.equal(child1);
+        });
+
+        it('should insert a child at last position', () => {
+            const child1 = DNA.DOM.createElement('div');
+            const child2 = DNA.DOM.createElement('div');
+            DNA.DOM.appendChild(wrapper, child1);
+            DNA.DOM.insertAdjacentElement(wrapper, 'beforeend', child2);
+            expect(child1.parentNode).to.be.equal(wrapper);
+            expect(child2.parentNode).to.be.equal(wrapper);
+            expect(wrapper.childNodes[0]).to.be.equal(child1);
+            expect(wrapper.childNodes[1]).to.be.equal(child2);
         });
     });
 

@@ -1,49 +1,86 @@
-import { spyFunction, getComponentName } from './helpers.js';
+import { __decorate } from 'tslib';
+import _decorate from '@babel/runtime/helpers/decorate';
 import * as DNA from '@chialab/dna';
+import { expect } from '@esm-bundle/chai/esm/chai.js';
+import { spyFunction, getComponentName } from './helpers.spec.js';
 
 describe('property', function() {
     this.timeout(10 * 1000);
 
     describe('@property', () => {
         it('should define a property', () => {
-            @DNA.customElement(getComponentName())
-            class MyElement extends DNA.Component {
-                @DNA.property() testProp = undefined;
-            }
+            let MyElement = class MyElement extends DNA.Component {
+                constructor(...args) {
+                    super(...args);
+                    this.testProp = undefined;
+                }
+            };
+
+            __decorate([
+                DNA.property(),
+            ], MyElement.prototype, 'testProp', undefined);
+            MyElement = __decorate([
+                DNA.customElement(getComponentName()),
+            ], MyElement);
 
             expect(new MyElement()).to.have.property('testProp', undefined);
         });
 
         it('should define a property with a defaultValue', () => {
-            @DNA.customElement(getComponentName())
-            class MyElement extends DNA.Component {
-                @DNA.property() testProp = 42;
-            }
+            let MyElement = class MyElement extends DNA.Component {
+                constructor(...args) {
+                    super(...args);
+                    this.testProp = 42;
+                }
+            };
+
+            __decorate([
+                DNA.property(),
+            ], MyElement.prototype, 'testProp', undefined);
+            MyElement = __decorate([
+                DNA.customElement(getComponentName()),
+            ], MyElement);
 
             expect(new MyElement()).to.have.property('testProp', 42);
             expect(new MyElement({ testProp: 84 })).to.have.property('testProp', 84);
         });
 
         it('should define a property with single type checker', () => {
-            @DNA.customElement(getComponentName())
-            class MyElement extends DNA.Component {
-                @DNA.property({
+            let MyElement = class MyElement extends DNA.Component {
+                constructor(...args) {
+                    super(...args);
+                    this.testProp = undefined;
+                }
+            };
+
+            __decorate([
+                DNA.property({
                     type: String,
-                })
-                testProp = undefined;
-            }
+                }),
+            ], MyElement.prototype, 'testProp', undefined);
+            MyElement = __decorate([
+                DNA.customElement(getComponentName()),
+            ], MyElement);
 
             expect(() => new MyElement({ testProp: 42 })).to.throw(TypeError);
         });
 
         it('should define a property with multiple type checkers', () => {
-            @DNA.customElement(getComponentName())
-            class MyElement extends DNA.Component {
-                @DNA.property({
+            let MyElement = class MyElement extends DNA.Component {
+                constructor(...args) {
+                    super(...args);
+                    this.testProp = undefined;
+                }
+            };
+
+            __decorate([
+                DNA.property({
                     type: [String, Boolean],
-                })
-                testProp = undefined;
-            }
+                }),
+            ], MyElement.prototype, 'testProp', undefined);
+            MyElement = __decorate([
+                DNA.customElement(getComponentName()),
+            ], MyElement);
 
             expect(new MyElement({ testProp: 'string' })).to.have.property('testProp', 'string');
             expect(new MyElement({ testProp: true })).to.have.property('testProp', true);
@@ -51,9 +88,15 @@ describe('property', function() {
         });
 
         it('should define a property with custom validation', () => {
-            @DNA.customElement(getComponentName())
-            class MyElement extends DNA.Component {
-                @DNA.property({
+            let MyElement = class MyElement extends DNA.Component {
+                constructor(...args) {
+                    super(...args);
+                    this.testProp = undefined;
+                }
+            };
+
+            __decorate([
+                DNA.property({
                     type: [String, Boolean],
                     validate(value) {
                         if (typeof value === 'string') {
@@ -62,9 +105,11 @@ describe('property', function() {
 
                         return true;
                     },
-                })
-                testProp = undefined;
-            }
+                }),
+            ], MyElement.prototype, 'testProp', undefined);
+            MyElement = __decorate([
+                DNA.customElement(getComponentName()),
+            ], MyElement);
 
             expect(new MyElement({ testProp: 'string' })).to.have.property('testProp', 'string');
             expect(new MyElement({ testProp: true })).to.have.property('testProp', true);
@@ -73,73 +118,204 @@ describe('property', function() {
         });
 
         it('should define a property with custom getter', () => {
-            @DNA.customElement(getComponentName())
-            class MyElement extends DNA.Component {
-                @DNA.property({
+            let MyElement = class MyElement extends DNA.Component {
+                constructor(...args) {
+                    super(...args);
+                    this.testProp = 42;
+                }
+            };
+
+            __decorate([
+                DNA.property({
                     getter(value) {
                         return value * 2;
                     },
-                })
-                testProp = 42;
-            }
+                }),
+            ], MyElement.prototype, 'testProp', undefined);
+            MyElement = __decorate([
+                DNA.customElement(getComponentName()),
+            ], MyElement);
 
             expect(new MyElement()).to.have.property('testProp', 84);
             expect(new MyElement({ testProp: 2 })).to.have.property('testProp', 4);
         });
 
         it('should define a property with custom setter', () => {
-            @DNA.customElement(getComponentName())
-            class MyElement extends DNA.Component {
-                @DNA.property({
+            let MyElement = class MyElement extends DNA.Component {
+                constructor(...args) {
+                    super(...args);
+                    this.testProp = 42;
+                }
+            };
+
+            __decorate([
+                DNA.property({
+                    attribute: false,
                     setter(value) {
                         return value / 2;
                     },
-                })
-                testProp = 42;
-            }
+                }),
+            ], MyElement.prototype, 'testProp', undefined);
+            MyElement = __decorate([
+                DNA.customElement(getComponentName()),
+            ], MyElement);
 
             expect(new MyElement()).to.have.property('testProp', 42);
             expect(new MyElement({ testProp: 2 })).to.have.property('testProp', 1);
         });
 
+        it('should define a property with decorated accessor', () => {
+            let MyElement = class MyElement extends DNA.Component {
+                constructor(...args) {
+                    super(...args);
+                    this.testProp = 42;
+                }
+
+                get testProp() {
+                    return this.getInnerPropertyValue('testProp') * 2;
+                }
+
+                set testProp(value) {
+                    this.setInnerPropertyValue('testProp', value);
+                }
+            };
+
+            __decorate([
+                DNA.property(),
+            ], MyElement.prototype, 'testProp', undefined);
+            MyElement = __decorate([
+                DNA.customElement(getComponentName()),
+            ], MyElement);
+
+            expect(new MyElement()).to.have.property('testProp', 84);
+            expect(new MyElement({ testProp: 2 })).to.have.property('testProp', 4);
+        });
+
         it('should define a property with a single observer', () => {
             const listener = spyFunction((...args) => args);
 
-            @DNA.customElement(getComponentName())
-            class MyElement extends DNA.Component {
-                @DNA.property({
+            let MyElement = class MyElement extends DNA.Component {
+                constructor(...args) {
+                    super(...args);
+                    this.testProp = 42;
+                }
+            };
+
+            __decorate([
+                DNA.property({
                     observe: listener,
-                })
-                testProp = 42;
-            }
+                }),
+            ], MyElement.prototype, 'testProp', undefined);
+            MyElement = __decorate([
+                DNA.customElement(getComponentName()),
+            ], MyElement);
 
             expect(new MyElement()).to.have.property('testProp', 42);
             expect(listener.invoked).to.be.false;
             expect(new MyElement({ testProp: 84 })).to.have.property('testProp', 84);
             expect(listener.invoked).to.be.true;
-            expect(listener.response).to.be.deep.equal([42, 84]);
+            expect(listener.response).to.be.deep.equal([42, 84, 'testProp']);
+        });
+
+        it('should define a property with observe decorator', () => {
+            const listener = spyFunction((...args) => args);
+
+            let MyElement = class MyElement extends DNA.Component {
+                constructor(...args) {
+                    super(...args);
+                    this.testProp = 42;
+                }
+
+                listener(...args) {
+                    listener(...args);
+                }
+            };
+
+            __decorate([
+                DNA.property(),
+            ], MyElement.prototype, 'testProp', undefined);
+            __decorate([
+                DNA.observe('testProp'),
+            ], MyElement.prototype, 'listener', undefined);
+            MyElement = __decorate([
+                DNA.customElement(getComponentName()),
+            ], MyElement);
+
+            expect(new MyElement()).to.have.property('testProp', 42);
+            expect(listener.invoked).to.be.false;
+            expect(new MyElement({ testProp: 84 })).to.have.property('testProp', 84);
+            expect(listener.invoked).to.be.true;
+            expect(listener.response).to.be.deep.equal([42, 84, 'testProp']);
+        });
+
+        it('should define a property with observe decorator (babel)', () => {
+            const listener = spyFunction((...args) => args);
+
+            const MyElement = _decorate([DNA.customElement(getComponentName())], (_initialize, _DNA$Component) => {
+                class MyElement extends _DNA$Component {
+                    constructor(...args) {
+                        super(...args);
+
+                        _initialize(this);
+                    }
+
+                }
+
+                return {
+                    F: MyElement,
+                    d: [{
+                        kind: 'field',
+                        decorators: [DNA.property()],
+                        key: 'testProp',
+
+                        value() {
+                            return 42;
+                        },
+
+                    }, {
+                        kind: 'method',
+                        decorators: [DNA.observe('testProp')],
+                        key: 'listener',
+                        value: listener,
+                    }],
+                };
+            }, DNA.Component);
+
+            expect(new MyElement()).to.have.property('testProp', 42);
+            expect(listener.invoked).to.be.false;
+            expect(new MyElement({ testProp: 84 })).to.have.property('testProp', 84);
+            expect(listener.invoked).to.be.true;
+            expect(listener.response).to.be.deep.equal([42, 84, 'testProp']);
         });
 
         it('should define a property with multiple observers', () => {
             const listener1 = spyFunction((...args) => args);
             const listener2 = spyFunction((...args) => args);
 
-            @DNA.customElement(getComponentName())
-            class MyElement extends DNA.Component {
-                @DNA.property({
+            let MyElement = class MyElement extends DNA.Component {
+                constructor(...args) {
+                    super(...args);
+                    this.testProp = 42;
+                }
+            };
+
+            __decorate([
+                DNA.property({
                     observers: [listener1, listener2],
-                })
-                testProp = 42;
-            }
+                }),
+            ], MyElement.prototype, 'testProp', undefined);
+            MyElement = __decorate([
+                DNA.customElement(getComponentName()),
+            ], MyElement);
 
             expect(new MyElement()).to.have.property('testProp', 42);
             expect(listener1.invoked).to.be.false;
             expect(listener2.invoked).to.be.false;
             expect(new MyElement({ testProp: 84 })).to.have.property('testProp', 84);
             expect(listener1.invoked).to.be.true;
-            expect(listener1.response).to.be.deep.equal([42, 84]);
+            expect(listener1.response).to.be.deep.equal([42, 84, 'testProp']);
             expect(listener2.invoked).to.be.true;
-            expect(listener2.response).to.be.deep.equal([42, 84]);
+            expect(listener2.response).to.be.deep.equal([42, 84, 'testProp']);
         });
     });
 
@@ -260,6 +436,7 @@ describe('property', function() {
                 static get properties() {
                     return {
                         testProp: {
+                            attribute: false,
                             defaultValue: 42,
                             setter(value) {
                                 return value / 2;
@@ -294,7 +471,7 @@ describe('property', function() {
             expect(listener.invoked).to.be.false;
             expect(new MyElement({ testProp: 84 })).to.have.property('testProp', 84);
             expect(listener.invoked).to.be.true;
-            expect(listener.response).to.be.deep.equal([42, 84]);
+            expect(listener.response).to.be.deep.equal([42, 84, 'testProp']);
         });
 
         it('should define a property with multiple observers', () => {
@@ -318,9 +495,9 @@ describe('property', function() {
             expect(listener2.invoked).to.be.false;
             expect(new MyElement({ testProp: 84 })).to.have.property('testProp', 84);
             expect(listener1.invoked).to.be.true;
-            expect(listener1.response).to.be.deep.equal([42, 84]);
+            expect(listener1.response).to.be.deep.equal([42, 84, 'testProp']);
             expect(listener2.invoked).to.be.true;
-            expect(listener2.response).to.be.deep.equal([42, 84]);
+            expect(listener2.response).to.be.deep.equal([42, 84, 'testProp']);
         });
 
         it('should inherit and reduce the prototype chain', () => {
@@ -371,23 +548,53 @@ describe('property', function() {
         });
 
         it('should inherit and reduce the prototype chain with decorator', () => {
-            class BaseElement extends DNA.Component {
-                @DNA.property({
+            const BaseElement = class BaseElement extends DNA.Component {
+                constructor(...args) {
+                    super(...args);
+                    this.override = 42;
+                }
+            };
+
+            __decorate([
+                DNA.property({
                     type: String,
-                }) inherit;
-                @DNA.property() override = 42;
-            }
+                }),
+            ], BaseElement.prototype, 'inherit', undefined);
+            __decorate([
+                DNA.property(),
+            ], BaseElement.prototype, 'override', undefined);
 
-            @DNA.customElement(getComponentName())
-            class MyElement extends BaseElement {
-                @DNA.property() override = 84;
-                @DNA.property() newProp = true;
-            }
+            let MyElement = class MyElement extends BaseElement {
+                constructor(...args) {
+                    super(...args);
+                    this.override = 84;
+                    this.newProp = true;
+                }
+            };
 
-            @DNA.customElement(getComponentName())
-            class MyElement2 extends BaseElement {
-                @DNA.property() newProp = false;
-            }
+            __decorate([
+                DNA.property(),
+            ], MyElement.prototype, 'override', undefined);
+            __decorate([
+                DNA.property(),
+            ], MyElement.prototype, 'newProp', undefined);
+            MyElement = __decorate([
+                DNA.customElement(getComponentName()),
+            ], MyElement);
+
+            let MyElement2 = class MyElement2 extends BaseElement {
+                constructor(...args) {
+                    super(...args);
+                    this.newProp = false;
+                }
+            };
+
+            __decorate([
+                DNA.property(),
+            ], MyElement2.prototype, 'newProp', undefined);
+            MyElement2 = __decorate([
+                DNA.customElement(getComponentName()),
+            ], MyElement2);
 
             const element = new MyElement();
             expect(element).to.have.property('inherit');
@@ -422,7 +629,7 @@ describe('property', function() {
             element.observe('testProp', listener);
             element.testProp = 84;
             expect(listener.invoked).to.be.true;
-            expect(listener.response).to.be.deep.equal([100, 84]);
+            expect(listener.response).to.be.deep.equal([100, 84, 'testProp']);
         });
 
         it('should throw for undeclared properties', () => {

@@ -1,7 +1,23 @@
-import type { ComponentInterface } from './Interfaces';
+import type { IterableNodeList } from './types';
+import type { ComponentInstance } from './Component';
 import { window } from './window';
-import { createSymbolKey } from './symbols';
-import { cloneChildNodes } from './NodeList';
+
+let symbols = 0;
+
+/**
+ * Create a symbolic key.
+ * When native Symbol is not defined, compute an unique string key.
+ * @return An unique key.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const createSymbol = (description?: string | number): any => {
+    /* c8 ignore start */
+    if (typeof Symbol !== 'undefined') {
+        return Symbol(description);
+    }
+    return `__dna${symbols++}`;
+    /* c8 ignore stop */
+};
 
 export const { Node, HTMLElement, Event, CustomEvent, document } = window;
 export const { DOCUMENT_NODE, TEXT_NODE, COMMENT_NODE, ELEMENT_NODE } = Node;
@@ -20,6 +36,26 @@ export const indexOf = Array.prototype.indexOf;
  * Alias to Object.getOwnPropertyDescriptor.
  */
 export const getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+
+/**
+ * Like Object.getOwnPropertyDescriptor, but for all the property chain.
+ */
+export const getPropertyDescriptor = (...args: Parameters<typeof getOwnPropertyDescriptor>): ReturnType<typeof getOwnPropertyDescriptor> => {
+    if (!args[0]) {
+        return;
+    }
+    return getOwnPropertyDescriptor(...args) || getPropertyDescriptor(getPrototypeOf(args[0]), args[1]);
+};
+
+/**
+ * Alias to Object.setPrototypeOf.
+ */
+export const getPrototypeOf = Object.getPrototypeOf;
+
+/**
+ * Alias to Object.setPrototypeOf.
+ */
+export const setPrototypeOf = Object.setPrototypeOf || ((obj, proto) => { obj.__proto__ = proto; });
 
 /**
  * Alias to Object.prototype.toString.
@@ -57,6 +93,11 @@ export const insertBeforeImpl = Node.prototype.insertBefore;
 export const replaceChildImpl = Node.prototype.replaceChild;
 
 /**
+ * Alias to HTMLElement.prototype.insertAdjacentElement.
+ */
+export const insertAdjacentElementImpl = HTMLElement.prototype.insertAdjacentElement;
+
+/**
  * Alias to Node.prototype.isConnected.
  */
 export const isConnectedImpl = getOwnPropertyDescriptor(Node.prototype, 'isConnected');
@@ -84,7 +125,10 @@ export const removeAttributeImpl = HTMLElement.prototype.removeAttribute;
 /**
  * Alias to HTMLElement.prototype.matches.
  */
-export const matchesImpl = HTMLElement.prototype.matches || HTMLElement.prototype.webkitMatchesSelector || (HTMLElement.prototype as any).msMatchesSelector as typeof Element.prototype.matches;
+export const matchesImpl = HTMLElement.prototype.matches ||
+    HTMLElement.prototype.webkitMatchesSelector ||
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (HTMLElement.prototype as any).msMatchesSelector;
 
 /**
  * Alias to document.createDocumentFragment.
@@ -140,13 +184,14 @@ export const isNode = (target: unknown): target is Node => target instanceof Nod
  * @param node The node to check.
  * @return The node is a Document instance.
  */
-export const isDocument = (node: any): node is Document => node && node.nodeType === DOCUMENT_NODE;
+export const isDocument = (node: Node): node is Document => node && node.nodeType === DOCUMENT_NODE;
 
 /**
  * Check if a node is a Text instance.
  * @param node The node to check.
  * @return The node is a Text instance.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isText = (node: any): node is Text => node && node.nodeType === TEXT_NODE;
 
 /**
@@ -154,48 +199,53 @@ export const isText = (node: any): node is Text => node && node.nodeType === TEX
  * @param node The node to check.
  * @return The node is an Element instance.
  */
-export const isElement = (node: any): node is HTMLElement => node && node.nodeType === ELEMENT_NODE;
-
-/**
- * Check if a node is a Comment instance.
- * @param node The node to check.
- * @return The node is a Text instance.
- */
-export const isComment = (node: any): node is Comment => node && node.nodeType === COMMENT_NODE;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isElement = <T extends Element>(node: any): node is T => node && node.nodeType === ELEMENT_NODE;
 
 /**
  * Check if an object is an Event instance.
  * @param node The node to check.
  * @return The object is an Event instance.
  */
-export const isEvent = (event: unknown): event is Event => event instanceof Event;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isEvent = (event: any): event is Event => event instanceof Event;
 
 /**
  * Check if a Node is connected.
  *
  * @return A truthy value for connected targets.
  */
-export const isConnected: (this: Node | void) => boolean = isConnectedImpl ? (isConnectedImpl as any).get : function(this: Node | void): boolean {
-    if (isElement(this) || isText(this)) {
-        return isConnected.call(this.parentNode as Node);
-    }
-    if (isDocument(this)) {
-        return true;
-    }
+export const isConnected: (this: Node) => boolean = isConnectedImpl ?
+    (isConnectedImpl.get as (this: Node) => boolean) :
+    function(this: Node): boolean {
+        if (isElement(this) || isText(this)) {
+            const parent = this.parentNode;
+            if (!parent) {
+                return false;
+            }
+            return isConnected.call(parent);
+        }
+        if (isDocument(this)) {
+            return true;
+        }
 
-    return false;
-};
+        return false;
+    };
 
 /**
  * A symbol which identify emulated components.
  */
-const EMULATE_LIFECYCLE_SYMBOL = createSymbolKey();
+const EMULATE_LIFECYCLE_SYMBOL: unique symbol = createSymbol();
+
+type WithEmulatedLifecycle<T extends Element> = T & {
+    [EMULATE_LIFECYCLE_SYMBOL]?: boolean;
+};
 
 /**
  * Check if a node require emulated life cycle.
  * @param node The node to check.
  */
-export const shouldEmulateLifeCycle = (node: Node): node is ComponentInterface<HTMLElement> => (node as any)[EMULATE_LIFECYCLE_SYMBOL];
+export const shouldEmulateLifeCycle = (node: WithEmulatedLifecycle<Element>) => !!node[EMULATE_LIFECYCLE_SYMBOL];
 
 /**
  * Invoke `connectedCallback` method of a Node (and its descendents).
@@ -203,14 +253,14 @@ export const shouldEmulateLifeCycle = (node: Node): node is ComponentInterface<H
  *
  * @param node The connected node.
  */
-export const connect = (node: Node, force = false) => {
+export const connect = (node: Node) => {
     if (!isElement(node)) {
         return;
     }
-    if (force || shouldEmulateLifeCycle(node)) {
-        (node as ComponentInterface<HTMLElement>).connectedCallback();
+    if (shouldEmulateLifeCycle(node)) {
+        (node as ComponentInstance<HTMLElement>).connectedCallback();
     }
-    let children = cloneChildNodes(node.childNodes);
+    const children = cloneChildNodes(node.childNodes);
     for (let i = 0, len = children.length; i < len; i++) {
         connect(children[i]);
     }
@@ -227,9 +277,9 @@ export const disconnect = (node: Node) => {
         return;
     }
     if (shouldEmulateLifeCycle(node)) {
-        node.disconnectedCallback();
+        (node as ComponentInstance<HTMLElement>).disconnectedCallback();
     }
-    let children = cloneChildNodes(node.childNodes);
+    const children = cloneChildNodes(node.childNodes);
     for (let i = 0, len = children.length; i < len; i++) {
         disconnect(children[i]);
     }
@@ -238,17 +288,29 @@ export const disconnect = (node: Node) => {
 /**
  * Should emulate life cycle.
  */
-let lifeCycleEmulation = typeof customElements === 'undefined';
+let lifeCycleEmulation = typeof window.customElements === 'undefined';
 
 /**
  * Flag the element for life cycle emulation.
  */
-export const emulateLifeCycle = (node: HTMLElement) => {
+export const emulateLifeCycle = (node: WithEmulatedLifecycle<HTMLElement>) => {
     lifeCycleEmulation = true;
-    (node as any)[EMULATE_LIFECYCLE_SYMBOL] = true;
+    node[EMULATE_LIFECYCLE_SYMBOL] = true;
 };
 
 /**
  * Life cycle emulation status.
  */
 export const emulatingLifeCycle = () => lifeCycleEmulation;
+
+/**
+ * Clone an array like instance.
+ * @param arr The array to convert.
+ * @return A shallow clone of the array.
+ */
+export const cloneChildNodes = (arr: NodeList|IterableNodeList) => {
+    const result = [] as unknown as IterableNodeList;
+    result.item = (index) => result[index];
+    for (let i = arr.length; i--; result.unshift(arr.item(i) as Node));
+    return result;
+};

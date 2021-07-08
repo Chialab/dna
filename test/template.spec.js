@@ -1,6 +1,7 @@
-import { spyFunction, getComponentName, wait } from './helpers.js';
+import { spyFunction, getComponentName, wait } from './helpers.spec.js';
 import { Observable } from 'rxjs';
 import * as DNA from '@chialab/dna';
+import { expect } from '@esm-bundle/chai/esm/chai.js';
 
 describe('template', function() {
     let wrapper;
@@ -25,17 +26,17 @@ describe('template', function() {
                 return DNA.html`<h1>Hello world!</h1>`;
             },
             PLAIN_HTML() {
-                return DNA.html('<h1>Hello world!</h1>');
+                return DNA.compile('<h1>Hello world!</h1>');
             },
         };
         /* eslint-enable mocha/no-setup-in-describe */
 
-        for (let type in TEMPLATES) {
+        for (const type in TEMPLATES) {
             it(type, () => {
                 DNA.render(TEMPLATES[type](), wrapper);
-                expect(wrapper.childNodes).to.have.lengthOf(1);
-                expect(wrapper.childNodes[0].tagName).to.be.equal('H1');
-                expect(wrapper.childNodes[0].textContent).to.be.equal('Hello world!');
+                expect(wrapper.children).to.have.lengthOf(1);
+                expect(wrapper.children[0].tagName).to.be.equal('H1');
+                expect(wrapper.children[0].textContent).to.be.equal('Hello world!');
             });
         }
     });
@@ -52,7 +53,7 @@ describe('template', function() {
         };
         /* eslint-enable mocha/no-setup-in-describe */
 
-        for (let type in TEMPLATES) {
+        for (const type in TEMPLATES) {
             it(type, () => {
                 DNA.render(TEMPLATES[type](), wrapper);
                 expect(wrapper.childNodes).to.have.lengthOf(1);
@@ -74,7 +75,7 @@ describe('template', function() {
         };
         /* eslint-enable mocha/no-setup-in-describe */
 
-        for (let type in TEMPLATES) {
+        for (const type in TEMPLATES) {
             it(type, () => {
                 DNA.render(TEMPLATES[type]({
                     name: 'Alan',
@@ -103,7 +104,7 @@ describe('template', function() {
         };
         /* eslint-enable mocha/no-setup-in-describe */
 
-        for (let type in TEMPLATES) {
+        for (const type in TEMPLATES) {
             it(type, () => {
                 DNA.render(TEMPLATES[type]({
                     name: 'filter',
@@ -132,7 +133,7 @@ describe('template', function() {
         };
         /* eslint-enable mocha/no-setup-in-describe */
 
-        for (let type in TEMPLATES) {
+        for (const type in TEMPLATES) {
             it(type, () => {
                 DNA.render(TEMPLATES[type]({
                     items: ['Alan', 'Brian', 'Carl'],
@@ -171,7 +172,7 @@ describe('template', function() {
         };
         /* eslint-enable mocha/no-setup-in-describe */
 
-        for (let type in TEMPLATES) {
+        for (const type in TEMPLATES) {
             it(type, () => {
                 DNA.render(TEMPLATES[type]({
                     avatar: 'cat.png',
@@ -200,7 +201,7 @@ describe('template', function() {
         };
         /* eslint-enable mocha/no-setup-in-describe */
 
-        for (let type in TEMPLATES) {
+        for (const type in TEMPLATES) {
             it(type, () => {
                 const rootName = getComponentName();
                 class MyElement extends DNA.extend(DNA.window.HTMLDivElement) {
@@ -225,7 +226,7 @@ describe('template', function() {
             JSX(titleName) {
                 return DNA.h(DNA.Fragment, null,
                     DNA.h('div', { class: 'layout-header' }, DNA.h(`${titleName}-jsx`, null, DNA.h('slot', { name: 'title' }))),
-                    DNA.h('div', { class: 'layout-body' }, DNA.h('slot')),
+                    DNA.h('div', { class: 'layout-body' }, DNA.h('slot'))
                 );
             },
             HTML(titleName) {
@@ -243,7 +244,7 @@ describe('template', function() {
         };
         /* eslint-enable mocha/no-setup-in-describe */
 
-        for (let type in TEMPLATES) {
+        for (const type in TEMPLATES) {
             it(type, () => {
                 const rootName = getComponentName();
                 const titleName = getComponentName();
@@ -266,7 +267,7 @@ describe('template', function() {
                 const element = DNA.render(DNA.h(`${rootName}-${type.toLowerCase()}`, null,
                     DNA.h('h1', { slot: 'title' }, 'Title'),
                     DNA.h('img', { src: 'cat.png' }),
-                    DNA.h('p', null, 'Body'),
+                    DNA.h('p', null, 'Body')
                 ), wrapper);
 
                 expect(element.childNodes).to.have.lengthOf(2);
@@ -292,7 +293,7 @@ describe('template', function() {
             JSX() {
                 return DNA.h(DNA.Fragment, null,
                     DNA.h('div', { class: 'layout-header' }, DNA.h('slot', { name: 'title' })),
-                    DNA.h('div', { class: 'layout-body' }, DNA.h('slot')),
+                    DNA.h('div', { class: 'layout-body' }, DNA.h('slot'))
                 );
             },
             HTML() {
@@ -308,7 +309,7 @@ describe('template', function() {
         };
         /* eslint-enable mocha/no-setup-in-describe */
 
-        for (let type in TEMPLATES) {
+        for (const type in TEMPLATES) {
             it(type, () => {
                 const name = getComponentName();
                 class MyElement extends DNA.Component {
@@ -320,7 +321,7 @@ describe('template', function() {
                 const element = DNA.render(DNA.h(`${name}-${type.toLowerCase()}`, null,
                     DNA.h('h1', { slot: 'title' }, 'Title'),
                     DNA.h('img', { src: 'cat.png' }),
-                    DNA.h('p', null, 'Body'),
+                    DNA.h('p', null, 'Body')
                 ), wrapper);
 
                 DNA.customElements.define(`${name}-${type.toLowerCase()}`, MyElement);
@@ -355,7 +356,7 @@ describe('template', function() {
             };
             /* eslint-enable mocha/no-setup-in-describe */
 
-            for (let type in TEMPLATES) {
+            for (const type in TEMPLATES) {
                 it(type, () => {
                     const listener = spyFunction();
                     DNA.render(TEMPLATES[type]({
@@ -390,7 +391,7 @@ describe('template', function() {
             };
             /* eslint-enable mocha/no-setup-in-describe */
 
-            for (let type in TEMPLATES) {
+            for (const type in TEMPLATES) {
                 it(type, async () => {
                     const promise = new Promise((resolve) => {
                         setTimeout(() => resolve('World!'), 1000);
@@ -428,7 +429,7 @@ describe('template', function() {
             };
             /* eslint-enable mocha/no-setup-in-describe */
 
-            for (let type in TEMPLATES) {
+            for (const type in TEMPLATES) {
                 it(type, async () => {
                     const promise = new Promise((resolve, reject) => {
                         setTimeout(() => reject('timeout'), 1000);
@@ -501,7 +502,7 @@ describe('template', function() {
             };
             /* eslint-enable mocha/no-setup-in-describe */
 
-            for (let type in TEMPLATES) {
+            for (const type in TEMPLATES) {
                 it(type, async () => {
                     const observable$ = new Observable(async (subscriber) => {
                         await wait(100);
@@ -545,7 +546,7 @@ describe('template', function() {
             };
             /* eslint-enable mocha/no-setup-in-describe */
 
-            for (let type in TEMPLATES) {
+            for (const type in TEMPLATES) {
                 it(type, async () => {
                     const observable$ = new Observable(async (subscriber) => {
                         await wait(100);

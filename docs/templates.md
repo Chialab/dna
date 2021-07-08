@@ -67,7 +67,7 @@ html`<span>${this.firstName} ${this.lastName}</span>`
 <summary>JSX</summary>
 <div>
 
-```ts
+```tsx
 <span>{this.firstName} {this.lastName}</span>
 ```
 
@@ -94,7 +94,7 @@ html`<input name=${this.name} disabled=${this.disabled} required />`
 <summary>JSX</summary>
 <div>
 
-```ts
+```tsx
 <input name={this.name} disabled={this.disabled} required />
 ```
 
@@ -126,7 +126,7 @@ html`<ul>
 <summary>JSX</summary>
 <div>
 
-```ts
+```tsx
 <ul>
     {this.items.map((item, index) => <li>{index}. {item}</li>)}
 </ul>
@@ -167,7 +167,7 @@ html`
 <summary>JSX</summary>
 <div>
 
-```ts
+```tsx
 <>
     {this.avatar && <img src={this.avatar} />}
     <h1>{this.title || 'Untitled'}</h1>
@@ -222,8 +222,9 @@ html`
 <summary>JSX</summary>
 <div>
 
-```ts
+```tsx
 import { until } from '@chialab/dna';
+
 <>
     {until(json, 'Loading...')}
     {json
@@ -300,35 +301,31 @@ h(Fragment, null,
 
 ## HTML content
 
-By default, HTML strings will be interpolated as plain content. It means that a property `content` valorized as `"<h1>Hello</h1>"` will not create a H1 element, but it will print the code as is. In order to render dynamic html content, you need to pass the code to the `html` helper:
+By default, HTML strings will be interpolated as plain content. It means that a property `content` valorized as `"<h1>Hello</h1>"` will not create a H1 element, but it will print the code as is. In order to render dynamic html content, you can use the `parseDOM` directive:
 
 ```diff
-import { html } from '@chialab/dna';
+import { html, parseDOM } from '@chialab/dna';
 
 const content = '<h1>Hello</h1>';
 
--<x-label>{content}</x-label>;
-+<x-label>{html(content)}</x-label>;
+-html`<x-label>${content}</x-label>`;
++html`<x-label>${parseDOM(content)}</x-label>`;
 ```
 
-<aside class="note">
+⚠️ Injecting uncontrolled HTML content may exposes your application to XSS vulnerabilities. Always make sure you are rendering secure code!
 
-Injecting uncontrolled HTML content may exposes your application to XSS vulnerabilities. Always make sure you are rendering secure code!
+## Function components
 
-</aside>
-
-## Functional components
-
-Sometimes, you may want to break up templates in smaller parts without having to define new Custom Elements. In this cases, you can use functional components. Functional components have first class support in many frameworks like React and Vue, but they require hooks in order to update DOM changes. Since DNA's state is reflected to the DOM and a "current context" is missing, the implemention is slightly different and does not require extra abstraction.
+Sometimes, you may want to break up templates in smaller parts without having to define new Custom Elements. In this cases, you can use functional components. Function components have first class support in many frameworks like React and Vue, but they require hooks in order to update DOM changes. Since DNA's state is reflected to the DOM and a "current context" is missing, the implemention is slightly different and does not require extra abstraction.
 
 
 
 ```ts
-function Row({ children, id }, state, update) {
-    let selected = state.get('selcted') ?? false;
-    let toggle = () => {
-        state.set('selected', !selected);
-        update();
+function Row({ children, id }, { store, requestUpdate }) {
+    const selected = store.get('selcted') ?? false;
+    const toggle = () => {
+        store.set('selected', !selected);
+        requestUpdate();
     };
 
     return html`<tr id=${id} class="${{ selected }}" onclick=${toggle}>${children}>${children}</tr>`;
@@ -348,12 +345,12 @@ html`<table>
 <summary>JSX</summary>
 <div>
 
-```ts
-function Row({ children, id }, state, refresh) {
-    let selected = state.get('selcted') ?? false;
-    let toggle = () => {
-        state.set('selected', !selected);
-        update();
+```tsx
+function Row({ children, id }, { store, requestUpdate }) {
+    const selected = store.get('selcted') ?? false;
+    const toggle = () => {
+        store.set('selected', !selected);
+        requestUpdate();
     };
 
     return <tr id=${id} class={ selected } onclick={toggle}>{...children}</tr>;
@@ -361,10 +358,10 @@ function Row({ children, id }, state, refresh) {
 
 <table>
     <tbody>
-        {items.map((item) => <Row ...item>
+        {items.map((item) => <Row {...item}>
             <td>{item.id}</td>
             <td>{item.label}</td>
-        </Row>}
+        </Row>)}
     </tbody>
 </table>
 ```
@@ -378,11 +375,11 @@ function Row({ children, id }, state, refresh) {
 
 
 ```ts
-function Row({ children, id }, state, update) {
-    let selected = state.get('selcted') ?? false;
-    let toggle = () => {
-        state.set('selected', !selected);
-        update();
+function Row({ children, id }, { store, requestUpdate }) {
+    const selected = store.get('selcted') ?? false;
+    const toggle = () => {
+        store.set('selected', !selected);
+        requestUpdate();
     };
 
     return h('tr', { id, selected, onclick: toggle }, ...children);
@@ -426,18 +423,10 @@ will render:
 If you want to add some properties to the instance, you can pass it as hyper node. This is useful if you want to reference some nodes in your component:
 
 ```ts
-import { DOM, Component, html, customElement } from '@chialab/dna';
+import { DOM, Component, html, customElement, listen } from '@chialab/dna';
 
 @customElement('x-form')
 class Form extends Component {
-    static get listeners() {
-        return {
-            'change input'(this: Form) {
-                console.log(this.input.value);
-            },
-        };
-    }
-
     input = DOM.createElement('input');
 
     render() {
@@ -445,27 +434,27 @@ class Form extends Component {
             <${this.input} name="firstName" placeholder="Alan" />
         </form>`;
     }
+
+    @listen('change', this.input)
+    private onChange() {
+        console.log(this.input.value);
+    }
 }
 ```
 
 ## Slotted children
 
-One of the best practice for Web Components is to use the [Shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM) to render and stylize component's children.
-Shadow DOM is a good choice for encapsulating styles and handling components children but not for composability. During the render cycle, DNA is able to replicate some ShadowDOM features like slotted children and [styles](./styles) encapsulation.
+Slotted children are nodes that semantically are children of the component, but they are rendered in a different position in the template.
 
 For example, we may declare a custom `<dialog is="x-dialog">` tag with some layout features:
 
 ```ts
-import { Component, customElement, html, property } from '@chialab/dna';
+import { window, extend, customElement, html, property } from '@chialab/dna';
 
 @customElement('x-dialog', {
     extends: 'dialog',
 })
-class Dialog extends Component {
-    static get observedAttributes() {
-        return ['title', 'content'];
-    }
-
+class Dialog extends extend(window.HTMLDialogElement) {
     @property() title = '';
     @property() content = '';
 
@@ -486,17 +475,13 @@ class Dialog extends Component {
 
 This example has two problems:
 
-* Content is passed as property, which is not good for semantic
-* Body is interpolated as string, so HTML code is rendered as plain text.
+* content is passed as property, which is not good for semantic
+* body is interpolated as string, so HTML code is rendered as plain text.
 
-Shadow DOM solves those two issues, rendering "soft" children of an element into the `<slot>` tag:
+DNA solves those two issues, rendering "soft" children of an element into the `<slot>` tag:
 
 ```diff
-class Dialog extends Component {
--    static get observedAttributes() {
--        return ['title', 'content'];
--    }
-
+class Dialog extends extend(window.HTMLDialogElement) {
 -    @property() title = '';
 -    @property() content = '';
 
@@ -543,7 +528,7 @@ results
 We can also define multiple `<slot>` using a `name`, and reference them in the "soft" DOM using the `slot="name"` attribute, in order to handle more complex templates. The "unnamed" `<slot>` will colleced any element which does not specify a slot.
 
 ```diff
-class Dialog extends Component {
+class Dialog extends extend(window.HTMLDialogElement) {
     render() {
         return html`
             <div class="layout-container">
